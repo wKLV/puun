@@ -1,0 +1,55 @@
+=puun=
+
+== Features / TODO ==
+    * [ ] Atlas support
+        * [O] Load images
+        * [ ] Name sprites
+        * [ ] Create atlas
+    * [ ] Text rendering
+        * A letter renderd FYEAH!
+        * [ ] A lib (gf/text?) to render text ala render_squares
+    * [ ] Sound
+    * [ ] Keyboard Input
+    * [ ] Mouse Input
+        * [.] getPosition
+        * [ ] click
+        * [ ] left, right
+        * [ ] html workaraound if needed
+    * [ ] Entity system
+        * purrhaps not required? :3
+    * [.] Platforms
+        * [X] Linux
+            * I should make it more shippable, but hey, good enough for now.
+        * [o] Emscripten
+            * Should be better
+        * [ ] Windows
+            * [ ] Test if works as is
+            * If not, do work :}
+        * [ ] Mac Os x
+        * [ ] Mobiles
+            * [ ] Android
+            * [ ] IOS
+    * [ ] 3D graphics
+        * Amazing
+==bugs / fixes==
+    * [X] Textytest sometimes the character appears rotated?
+        * It had to do with initialization of square. I did not
+         initialize rotation, so if the memory was not 0 previously,
+         it rotated to a random angle.
+    * [ ] separate completely sdl layer from game code
+        * [ ] sdl_swapbuffers
+        * [ ] platform callbacks...
+    None so far
+==ideas==
+    * [ ] gf/text
+        * a text struct for a phrase
+            * pos, bbox would be ideal
+                * What if it doesn't fit?
+                * A: Render anyway
+                * B: Complain
+        * a render_text function
+            * Takes a text struct perhaps some other info?
+    * [ ] gf/sprite
+        * Load atlas from description text
+        * Access atlas to get sprite
+        * Render sprites
