@@ -10,11 +10,11 @@ Square create_square(float width, float height) {
     return square;
 }
 void square_traslate(Square* square, float x, float y) {
-    square->x = x;
-    square->y = y;
+    square->position.x = x;
+    square->position.y = y;
 }
 void square_rotate(Square* square, float angle) {
-    square->rotation = angle;
+    square->position.rotation = angle;
 }
 
 
@@ -24,13 +24,8 @@ SquareList create_square_list(u8 program, Data squares) {
     sl.squares_length = 0;
 
     sl.program = program;
-    glGenBuffers(1, &sl.geo_buffer);
     glGenBuffers(1, &sl.pos_buffer);
-    glGenBuffers(1, &sl.elem_buffer);
 
-//    GLushort elements[] = {0,1,2,3};
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sl.elem_buffer);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
     return sl;
 }
 
@@ -43,15 +38,16 @@ void squareList_update_pos(SquareList sl, Data d) {
         Square s = sl.squares[i];
         float lx = -s.width/2, by = -s.height/2,
               rx = s.width/2, ty = s.height/2,
-              co = cos(s.rotation), si = sin(s.rotation);
-        float blx =   co*lx + si*by + s.x;
-        float bly = - si*lx + co*by + s.y;
-        float brx =   co*rx + si*by + s.x;
-        float bry = - si*rx + co*by + s.y;
-        float tlx =   co*lx + si*ty + s.x;
-        float tly = - si*lx + co*ty + s.y;
-        float trx =   co*rx + si*ty + s.x;
-        float try = - si*rx + co*ty + s.y;
+              co = cos(s.position.rotation),
+              si = sin(s.position.rotation);
+        float blx =   co*lx + si*by + s.position.x;
+        float bly = - si*lx + co*by + s.position.y;
+        float brx =   co*rx + si*by + s.position.x;
+        float bry = - si*rx + co*by + s.position.y;
+        float tlx =   co*lx + si*ty + s.position.x;
+        float tly = - si*lx + co*ty + s.position.y;
+        float trx =   co*rx + si*ty + s.position.x;
+        float try = - si*rx + co*ty + s.position.y;
         { // Vertex Bottom Left
             //pos
             data[dataI] = blx; dataI++;
@@ -70,7 +66,7 @@ void squareList_update_pos(SquareList sl, Data d) {
             //pos
             data[dataI] = brx; dataI++;
             data[dataI] = bry; dataI++;
-            data[dataI] = s.z; dataI++;
+            data[dataI] = s.position.z; dataI++;
 
             //uv
             data[dataI] = s.u2; dataI++;
@@ -84,7 +80,7 @@ void squareList_update_pos(SquareList sl, Data d) {
             //pos
             data[dataI] = tlx; dataI++;
             data[dataI] = tly; dataI++;
-            data[dataI] = s.z; dataI++;
+            data[dataI] = s.position.z; dataI++;
 
             //uv
             data[dataI] = s.u1; dataI++;
@@ -98,7 +94,7 @@ void squareList_update_pos(SquareList sl, Data d) {
             //pos
             data[dataI] = brx; dataI++;
             data[dataI] = bry; dataI++;
-            data[dataI] = s.z; dataI++;
+            data[dataI] = s.position.z; dataI++;
 
             //uv
             data[dataI] = s.u2; dataI++;
@@ -112,7 +108,7 @@ void squareList_update_pos(SquareList sl, Data d) {
             //pos
             data[dataI] = tlx; dataI++;
             data[dataI] = tly; dataI++;
-            data[dataI] = s.z; dataI++;
+            data[dataI] = s.position.z; dataI++;
 
             //uv
             data[dataI] = s.u1; dataI++;
@@ -126,7 +122,7 @@ void squareList_update_pos(SquareList sl, Data d) {
             //pos
             data[dataI] = trx; dataI++;
             data[dataI] = try; dataI++;
-            data[dataI] = s.z; dataI++;
+            data[dataI] = s.position.z; dataI++;
 
             //uv
             data[dataI] = s.u2; dataI++;
@@ -169,6 +165,4 @@ void render_squareList(SquareList sl, Data* unis_untyped,
     }
 
     glDrawArrays(GL_TRIANGLES, 0, 6*sl.squares_length);
-//    glDrawElements(GL_TRIANGLE_STRIP, 4,
-//            GL_UNSIGNED_SHORT, (void*)0);
 }
