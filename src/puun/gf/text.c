@@ -7,7 +7,7 @@
 
 gf_textStyle initTextStyle(char* font_pos,
         f32 pixels, u32 color) {
-    gf_textStyle s = {};
+    gf_textStyle s = {0};
 
     stbtt_fontinfo* font= malloc(sizeof(stbtt_fontinfo));
     char* buffer = malloc(1000000);

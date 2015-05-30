@@ -37,7 +37,7 @@ void render() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData uniImg = {};
+    UniformData uniImg = {0};
     uniImg.name = "texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;

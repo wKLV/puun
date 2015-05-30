@@ -25,8 +25,11 @@ void sdl_update() {
     render();
 }
 
-
+#ifdef WDS
+int WinMain() {
+#else
 int main() {
+#endif
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_WM_SetCaption("Firsty puun", NULL);
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);

@@ -16,7 +16,7 @@ struct gfFontData {
     u32 glBuffer;
 };
 
-struct gfFontData gfTextStyles[255] = {};
+struct gfFontData gfTextStyles[255] = {0};
 u8 gfTextStyles_length = 0;
 
 typedef struct {

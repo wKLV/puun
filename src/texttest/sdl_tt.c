@@ -14,7 +14,7 @@ void sdl_die() {
 };
 
 void sdl_update() {
-    SDL_Event event = {};
+    SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
         if(event.type == SDL_QUIT) die();
         if(event.type == SDL_MOUSEMOTION) {
@@ -26,7 +26,11 @@ void sdl_update() {
 }
 
 
+#ifdef WDS
+int WinMain() {
+#else
 int main() {
+#endif
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_WM_SetCaption("Texty test", NULL);
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
