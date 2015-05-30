@@ -12,6 +12,7 @@
 //char buffer[24<<20];
 
 static SquareList Texts;
+static gfText text;
 GLuint ImageId;
 void init(){
     u8* Image = malloc(1<<18);
@@ -38,7 +39,12 @@ void init(){
 
     gf_textStyle style = initTextStyle("assets/Ubuntu-Light.ttf", 35., 0);
     BBox bbox = {0, 0, 512, 512};
-    gfText text = {bbox, "HELLO WORLD      jump line", style};
+    //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
+    text.bbox = bbox;
+    text.text = "HELLO WORLD      jump line";
+    text.style = style;
+
+
     printf("fit: %d\n", gfTextFit(text));
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -89,13 +95,14 @@ void updateMouse(int x, int y){
 
 void render(){
     glClearColor(1.0, 1.0, 1.0, 1.0);
- //   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData uniImg = {};
-    uniImg.name = "texture";
-    uniImg.dataStructure = Texture;
-    uniImg.texnum = 0;
-    uniImg.id = ImageId;
+    gfTextRender(text);
+//    UniformData uniImg = {0};
+//    uniImg.name = "texture";
+//    uniImg.dataStructure = Texture;
+//    uniImg.texnum = 0;
+//   uniImg.id = ImageId;
 
 
     //render_squareList(Texts, (Data)&uniImg, 1);
