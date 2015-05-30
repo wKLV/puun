@@ -2,7 +2,7 @@
 
 == Features / TODO ==
     * [ ] Atlas support
-        * [O] Load images
+        * [X] Load images
         * [ ] Name sprites
         * [ ] Create atlas
     * [ ] Text rendering
@@ -22,7 +22,6 @@
             * I should make it more shippable, but hey, good enough for now.
         * [o] Emscripten
             * Should be better
-        * [ ] Windows
             * [ ] Test if works as is
             * If not, do work :}
         * [ ] Mac Os x

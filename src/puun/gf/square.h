@@ -1,21 +1,19 @@
-#include "../types.h"
+#ifndef puunSquare
+#define puunSquare
 
-typedef struct {
-    u32 x;
-    u32 y;
-    u32 w;
-    u32 h;
-} Sprite_data;
+#include "../types.h"
 
 typedef struct {
     float x;
     float y;
     float z;
+    float rotation;
+} Position;
 
+typedef struct {
+    Position position;
     float width;
     float height;
-
-    float rotation;
 
     float u1;
     float v1;
@@ -27,16 +25,12 @@ Square create_square(float width, float height);
 void square_traslate(Square* square, float x, float y);
 void square_rotate(Square* square, float angle);
 
-
-
 typedef struct {
    // Square* squares;
    // s32 squares_length;
     DEF_ARR(squares, Square)
 
     u8 program;
-    u32 elem_buffer;
-    u32 geo_buffer;
     u32 pos_buffer;
 } SquareList;
 
@@ -47,3 +41,4 @@ void squareList_update_pos(SquareList sl, Data d);
 
 void render_squareList(SquareList sl, Data* unis,
         s32 unis_length);
+#endif
