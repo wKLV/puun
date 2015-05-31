@@ -76,7 +76,7 @@ void init(){
     Texts = create_square_list(program, calloc(1,sizeof(Square)));
     Texts.program = program;
     Texts.squares_length = 1;
-    Texts.squares[0].x = 0; Texts.squares[0].y = 0; Texts.squares[0].z = 0;
+    Texts.squares[0].position.x = 0; Texts.squares[0].position.y = 0; Texts.squares[0].position.z = 0;
     Texts.squares[0].width = 1;
     Texts.squares[0].height = 1;
     Texts.squares[0].u1 = 0; Texts.squares[0].u2 = 1;
