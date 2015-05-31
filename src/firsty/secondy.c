@@ -83,16 +83,16 @@ void init() {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(1);
 
-    Square s = {};
+    Square s = {0};
     s.width = 0.8; s.height = 0.1;
     s.u1 = 0./512; s.u2= 256./512;
     s.v1 = 0./256; s.v2 = 49./256;
-    s.z = +0.8;
+    s.position.z = +0.8;
     Squares.squares[0] = s;
     s.width = 0.2; s.height = 0.2;
     s.u1 = 256./512; s.u2= 384./512;
     s.v1 = 0./256; s.v2 = 128./256;
-    s.z = 0;
+    s.position.z = 0;
     Squares.squares[1] = s;
     Squares.squares_length = 2;
 

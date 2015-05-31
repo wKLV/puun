@@ -52,7 +52,10 @@ SpriteList spritesFromSheet(SpriteSheet s, Data squares){
 
     Program = setupProgram(vs, 0, fs, 0);
     SquareList sl = create_square_list(Program, squares);
-    SpriteList splist = {sl, spritesheets[s.id].ImageId};
+
+    SpriteList splist = {0};
+    splist.squareList = sl;
+    splist.ImageId = spritesheets[s.id].ImageId;
     return splist;
 }
 
