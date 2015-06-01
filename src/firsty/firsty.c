@@ -61,15 +61,15 @@ void render() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData data[3] = {};
+    UniformData data[3] = {0};
 
-    UniformData uni = {};
+    UniformData uni = {0};
     uni.name = "world";
     uni.dataStructure = M3;
     uni.dataType = GL_FLOAT;
     uni.data = paddleMatrix;
 
-    UniformData uniImg = {};
+    UniformData uniImg = {0};
     uniImg.name = "texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;

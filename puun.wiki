@@ -1,29 +1,32 @@
 =puun=
 
 == Features / TODO ==
-    * [ ] Atlas support
+    * [ ] Sprite support
         * [X] Load images
         * [ ] Name sprites
         * [ ] Create atlas
+        * [ ] Load atlas from description text
+        * [ ] Access atlas to get sprite
+        * [ ] Render sprites
     * [ ] Text rendering
         * A letter renderd FYEAH!
-        * [ ] A lib (gf/text?) to render text ala render_squares
+        * [.] A lib (gf/text?) to render text ala render_squares
     * [ ] Sound
-    * [ ] Keyboard Input
-    * [ ] Mouse Input
+        * Work f*ker
+    * [ ] Input
+        * [ ] getKey()
         * [.] getPosition
-        * [ ] click
-        * [ ] left, right
+        * [ ] getClick: left, right
         * [ ] html workaraound if needed
     * [ ] Entity system
         * purrhaps not required? :3
-    * [.] Platforms
+    * [o] Platforms
         * [X] Linux
             * I should make it more shippable, but hey, good enough for now.
         * [o] Emscripten
             * Should be better
-            * [ ] Test if works as is
-            * If not, do work :}
+        * [X] Windows
+            * More shippable, but yeah.
         * [ ] Mac Os x
         * [ ] Mobiles
             * [ ] Android
@@ -40,6 +43,7 @@
         * [ ] platform callbacks...
     None so far
 ==ideas==
+    * [ ] Description text for initialization
     * [ ] gf/text
         * a text struct for a phrase
             * pos, bbox would be ideal
@@ -51,4 +55,13 @@
     * [ ] gf/sprite
         * Load atlas from description text
         * Access atlas to get sprite
-        * Render sprites
+==ideas==
+    * [ ] Description text for initialization
+    * [ ] gf/text
+        * a text struct for a phrase
+            * pos, bbox would be ideal
+                * What if it doesn't fit?
+                * A: Render anyway
+                * B: Complain
+        * a render_text function
+            * Takes a text struct perhaps some other info?
