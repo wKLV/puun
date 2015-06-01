@@ -1,3 +1,5 @@
+mkdir build
+
 gcc -g -O4 src/firsty/sdl_firsty.c -lSDL -lGL -lGLEW -lm -o build/firsty
 emcc -DJS src/firsty/sdl_firsty.c --preload-file assets -o build/firsty.html
 gcc -g -O4 src/firsty/sdl_secondy.c -lSDL -lGL -lGLEW -lm -o build/secondy

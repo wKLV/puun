@@ -1,0 +1,39 @@
+*.vim
+*.obj
+*.o
+*.dll
+*.a
+*.lib
+*.pdb
+build
+
+*.tmp
+
+## OS & work environments
+
+## Windows detritus
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## Mac crap
+
+.DS_Store
+
+## Linux things
+
+.trash
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
