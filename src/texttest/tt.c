@@ -9,6 +9,11 @@
 #include "../puun/gf/square2.c"
 #include "../puun/gf/text.c"
 
+
+#ifndef ASSETSPATH
+#define ASSETSPATH(name) "../assets/" # name
+#endif
+
 //char buffer[24<<20];
 
 static SquareList Texts;
@@ -37,7 +42,7 @@ void init(){
                              }\n\
     ";
 
-    gf_textStyle style = initTextStyle("assets/Ubuntu-Light.ttf", 35., 0);
+    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Light.ttf), 35., 0);
     BBox bbox = {0, 0, 512, 512};
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
@@ -53,7 +58,7 @@ void init(){
 
     stbtt_fontinfo font;
     char* buffer = malloc(1000000);
-    fread(buffer, 1, 1000000, fopen("assets/Ubuntu-Light.ttf", "rb"));
+    fread(buffer, 1, 1000000, fopen(ASSETSPATH(Ubuntu-Light.ttf), "rb"));
     stbtt_InitFont(&font, buffer, 0);
     ImageWidth = 512, ImageHeight = 512;
     float scale = stbtt_ScaleForPixelHeight(&font, 35);

@@ -12,6 +12,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../other/stb_image.h"
 
+#ifndef ASSETSPATH
+#define ASSETSPATH(name) "../assets/" # name
+#endif
+
 #define TAU 6.2832
 
 static GLfloat paddleMatrix[] = {
@@ -76,7 +80,7 @@ void init() {
     program = setupProgram(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
     Squares = create_square_list(program, malloc(3*sizeof(Square)));
     int x, y, n;
-    Image = stbi_load("assets/atlas.png", &x, &y, &n, 0);
+    Image = stbi_load(ASSETSPATH(atlas.png), &x, &y, &n, 0);
     ImageId = setupTexture(Image, x, y);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);

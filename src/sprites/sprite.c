@@ -10,6 +10,10 @@
 #include "sdl_puun.h"
 #include "../puun/gf/sprite.c"
 
+#ifndef ASSETSPATH
+#define ASSETSPATH(name) "../assets/" # name
+#endif
+
 #define TAU 6.2832
 
 static GLfloat paddleMatrix[] = {
@@ -51,7 +55,7 @@ void init() {
     running = true;
     buffer = malloc(4000);
     Data d = malloc(4*sizeof(Square));
-    sheet = loadSpriteSheet("assets/atlas.png");
+    sheet = loadSpriteSheet(ASSETSPATH(/atlas.png));
     Sprites = spritesFromSheet(*sheet, d);
 
     glEnable(GL_BLEND);

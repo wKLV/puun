@@ -1,4 +1,7 @@
-mkdir build
+if [ ! -d "$DIRECTORY" ]; then
+    mkdir build
+fi
+
 
 gcc -g -O4 src/firsty/sdl_firsty.c -lSDL -lGL -lGLEW -lm -o build/firsty
 emcc -DJS src/firsty/sdl_firsty.c --preload-file assets -o build/firsty.html

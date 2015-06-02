@@ -41,22 +41,13 @@
     * [ ] separate completely sdl layer from game code
         * [ ] sdl_swapbuffers
         * [ ] platform callbacks...
-    None so far
 ==ideas==
     * [ ] Description text for initialization
-    * [ ] gf/text
-        * a text struct for a phrase
-            * pos, bbox would be ideal
-                * What if it doesn't fit?
-                * A: Render anyway
-                * B: Complain
-        * a render_text function
-            * Takes a text struct perhaps some other info?
-    * [ ] gf/sprite
-        * Load atlas from description text
-        * Access atlas to get sprite
-==ideas==
-    * [ ] Description text for initialization
+        * [ ] Simple to write, perhaps bakeable?
+            * #define SPRITE_X 50\n #define SPRITE_Y 51
+                * We define the macro to use it like #define SPRITE_X getX("sprite")
+                * * Read wold be just scanf("#define blabla%s %s\n", foo, bar)
+                * You could include on compile time and it would be baked
     * [ ] gf/text
         * a text struct for a phrase
             * pos, bbox would be ideal

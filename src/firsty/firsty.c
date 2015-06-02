@@ -14,6 +14,10 @@
 
 #define TAU 6.2832
 
+#ifndef ASSETSPATH
+#define ASSETSPATH(name) "../assets/" # name
+#endif
+
 static GLuint vertexBuffer,
        elementBuffer,
        vertexShader,
@@ -115,9 +119,9 @@ void init() {
                               ";
     program = square_createType(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
     int x, y, n;
-    ballImage = stbi_load("assets/ball.png", &x, &y, &n, 0);
+    ballImage = stbi_load(ASSETSPATH(/ball.png), &x, &y, &n, 0);
     ballId = setupTexture(ballImage, x, y);
-    paddleImage = stbi_load("assets/paddle.png", &x, &y, &n, 0);
+    paddleImage = stbi_load(ASSETSPATH(/paddle.png), &x, &y, &n, 0);
     paddleId = setupTexture(paddleImage, x, y);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
