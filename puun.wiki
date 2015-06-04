@@ -1,13 +1,13 @@
 =puun=
 
 == Features / TODO ==
-    * [ ] Sprite support
+    * [.] Sprite support
         * [X] Load images
+        * [X] Render sprites
         * [ ] Name sprites
         * [ ] Create atlas
         * [ ] Load atlas from description text
         * [ ] Access atlas to get sprite
-        * [ ] Render sprites
     * [ ] Text rendering
         * A letter renderd FYEAH!
         * [.] A lib (gf/text?) to render text ala render_squares
@@ -38,9 +38,9 @@
         * It had to do with initialization of square. I did not
          initialize rotation, so if the memory was not 0 previously,
          it rotated to a random angle.
-    * [ ] separate completely sdl layer from game code
-        * [ ] sdl_swapbuffers
-        * [ ] platform callbacks...
+    * [X] separate completely sdl layer from game code
+        * [X] sdl_swapbuffers
+        * [X] platform callbacks...
 ==ideas==
     * [ ] Description text for initialization
         * [ ] Simple to write, perhaps bakeable?

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
-#include <SDL/SDL.h>
 #include <GL/glew.h>
 #ifdef JS
 #include <emscripten.h>
@@ -46,7 +45,9 @@ void render() {
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
 
-    SDL_GL_SwapBuffers();
+
+    puun_SWAP_BUFFERS();
+    //SDL_GL_SwapBuffers();
 }
 
 static Data buffer;

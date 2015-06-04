@@ -5,6 +5,8 @@
 #include <emscripten.h>
 #endif
 
+#define puun_SWAP_BUFFERS SDL_GL_SwapBuffers
+
 #include "sdl_puun.h"
 void sdl_die() {
 #ifdef JS

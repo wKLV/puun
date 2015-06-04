@@ -10,6 +10,10 @@ void update();
 
 void updateMouse(int x, int y);
 
+void getKeyboardKey(char* character);
+void getMousePosition(float* x, float* y);
+void getMouseClick(char click);
+
 void render();
 
 void die();
