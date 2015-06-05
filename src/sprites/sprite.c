@@ -110,6 +110,10 @@ void updateMouse(int x, int y) {
 
 
 void update(){
+    float a, b;
+    getMousePosition(&a, &b);
+    paddleX = s2p(a);
+    paddleRot = s2p(b);
     static float rotate = 0;
     static float vx = 0, vy = -1, px = 0, py = 0, av =0;
     static char hasBounced = 0;
@@ -136,6 +140,13 @@ void update(){
         hasBounced = 4;
         score++;
     }
+    puun_MouseClick click;
+    getMouseClick(&click);
+    puun_KEY key;
+    getKeyboardKey(&key);
+    if(click)
+        printf("MOUSE CLICKED\n");
+    if(key.isPressed) printf("%c\n", key.key);
 }
 
 void die() {

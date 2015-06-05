@@ -14,9 +14,9 @@
     * [ ] Sound
         * Work f*ker
     * [ ] Input
-        * [ ] getKey()
-        * [.] getPosition
-        * [ ] getClick: left, right
+        * [o] getKey()
+        * [o] getPosition
+        * [o] getClick: left, right
         * [ ] html workaraound if needed
     * [ ] Entity system
         * purrhaps not required? :3
