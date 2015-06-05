@@ -13,7 +13,7 @@
         * [.] A lib (gf/text?) to render text ala render_squares
     * [ ] Sound
         * Work f*ker
-    * [ ] Input
+    * [o] Input
         * [o] getKey()
         * [o] getPosition
         * [o] getClick: left, right
@@ -42,6 +42,7 @@
         * [X] sdl_swapbuffers
         * [X] platform callbacks...
 ==ideas==
+    * [ ] Screen vs Virtual coordinate system
     * [ ] Description text for initialization
         * [ ] Simple to write, perhaps bakeable?
             * #define SPRITE_X 50\n #define SPRITE_Y 51
