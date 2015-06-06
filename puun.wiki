@@ -11,7 +11,7 @@
     * [ ] Text rendering
         * A letter renderd FYEAH!
         * [.] A lib (gf/text?) to render text ala render_squares
-    * [ ] Sound
+    * [.] Sound
         * Work f*ker
     * [o] Input
         * [o] getKey()
