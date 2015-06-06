@@ -145,7 +145,7 @@ void update(){
     puun_KEY key;
     getKeyboardKey(&key);
     if(click)
-        printf("MOUSE CLICKED\n");
+        printf("MOUSE CLICKED\n", 0);
     if(key.isPressed) printf("%c\n", key.key);
 }
 

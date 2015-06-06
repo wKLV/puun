@@ -54,7 +54,7 @@ GLuint setupProgram(char* vertexSource, int vertexSourceSize, char* fragmentSour
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &shader_ok);
     if(shader_ok == GL_FALSE) {
         GLsizei length = 1000;
-        printf("Failed to compile vertex shader\n");
+        printf("Failed to compile vertex shader\n", 0); // FIX Hack to get wds printf
       //  printf("%s", vertexSource);
         show_info_log(vertexShader, glGetShaderiv, glGetShaderInfoLog);
         glDeleteShader(vertexShader);

@@ -14,6 +14,12 @@ void sdl_die() {
 #endif
     SDL_Quit();
 };
+#ifdef WDS
+#define printf(format, value) \
+    {FILE* wdsoutputfile = fopen("log.txt", "a");\
+    fprintf(wdsoutputfile, (format), (value));\
+    fclose(wdsoutputfile);}
+#endif
 
 static float mousePositionX;
 static float mousePositionY;
