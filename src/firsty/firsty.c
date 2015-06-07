@@ -7,7 +7,7 @@
 #include <emscripten.h>
 #endif
 
-#include "sdl_puun.h"
+#include "../puun/puun.h"
 #include "../puun/gf/square.c"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../other/stb_image.h"
@@ -129,7 +129,8 @@ void init() {
     glDepthMask(1);
 
     scaleMatrix(0.2, paddleMatrix);
-    loadnPlaySound(ASSETSPATH(ancient.mp3));
+    loadSoundFile(ASSETSPATH(bout.wav));
+    loadSoundFile(ASSETSPATH(ancient.ogg));
 }
 
 float s2p(int screen) {
@@ -140,6 +141,7 @@ float s2p(int screen) {
 }
 
 void bounce(float wallDegree, float* vx, float* vy, float* av, float incVel) {
+    playSound(0);
     float in = atan2(*vy, *vx);
     float vel = sqrt(*vx* *vx + *vy* *vy);
     float n = wallDegree;
@@ -159,6 +161,14 @@ void updateMouse(int x, int y) {
 }
 
 void update(){
+    puun_KEY key;
+    getKeyboardKey(&key);
+    float x, y;
+    getMousePosition(&x, &y);
+    paddleX = s2p(x);
+    paddleRot = s2p(y);
+    if(key.isPressed && key.key == 'p')
+        playSound(1);
     static float rotate = 0;
     static float vx = 0, vy = -1, px = 0, py = 0, av =0;
     static char hasBounced = 0;

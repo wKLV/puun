@@ -5,7 +5,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../other/stb_image_write.h"
 
-#include "sdl_puun.h"
+#include "../puun/puun.h"
 #include "../puun/gf/square2.c"
 #include "../puun/gf/text.c"
 
@@ -115,7 +115,7 @@ void render(){
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
 
-    SDL_GL_SwapBuffers();
+    puun_SWAP_BUFFERS();
 }
 
 void die(){

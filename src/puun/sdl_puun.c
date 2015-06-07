@@ -1,13 +1,18 @@
 #include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 #include <GL/glew.h>
 #include <stdio.h>
 #ifdef JS
 #include <emscripten.h>
 #endif
 
-#define puun_SWAP_BUFFERS SDL_GL_SwapBuffers
+void puun_SWAP_BUFFERS() {
+    SDL_GL_SwapBuffers();
+}
 
-#include "sdl_puun.h"
+#include "puun.h"
+#include "input/keyboard.h"
+#include "input/mouse.h"
 void sdl_die() {
 #ifdef JS
     emscripten_cancel_main_loop();
@@ -26,7 +31,6 @@ static float mousePositionY;
 
 static puun_KEY keyPressed;
 static puun_MouseClick isMouseClick;
-
 void sdl_update() {
     SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
@@ -47,7 +51,7 @@ void sdl_update() {
                     isMouseClick |= puun_RIGHT_CLICK;
                 }; break;
                 case SDL_BUTTON_MIDDLE: {
-                    isMouseClick |= punn_MIDDLE_CLICK;
+                    isMouseClick |= puun_MIDDLE_CLICK;
                 }; break;
               //WATCH: SDL2  isMouseClick |= event.button.clicks>1?puun_DOUBLE_CLICK:puun_NOCLICK;
             }
@@ -106,18 +110,29 @@ void sdl_update() {
     update();
     render();
 }
-
-void getKeyboardKey(puun_KEY* character) {
-    *character = keyPressed;
-}
 void getMousePosition(float* x, float* y) {
     *x = mousePositionX;
     *y= mousePositionY;
+}
+void getKeyboardKey(puun_KEY* character) {
+    *character = keyPressed;
 }
 void getMouseClick(puun_MouseClick* click) {
     *click = isMouseClick;
 }
 
+Mix_Music* music[512];
+int music_length;
+Mix_Chunk* chunks[1024];
+int chunks_length;
+
+puun_SoundId loadSoundFile(char* path) {
+    chunks[chunks_length] = Mix_LoadWAV(path);
+    return chunks_length++;
+}
+void playSound(puun_SoundId id) {
+    Mix_PlayChannel( -1, chunks[id], 0);
+}
 
 #ifdef WDS
 int WinMain() {
@@ -125,7 +140,9 @@ int WinMain() {
 int main() {
 #endif
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_WM_SetCaption("Secondy puun", NULL);
+    SDL_WM_SetCaption("Puun", NULL);
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n", 0);
+    Mix_Init(MIX_INIT_MP3|MIX_INIT_OGG);
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     glewInit();
     printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
@@ -138,4 +155,3 @@ int main() {
 
     return 0;
 }
-#include "sprite.c"
