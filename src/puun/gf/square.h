@@ -22,6 +22,7 @@ typedef struct {
 } Square;
 
 Square create_square(float width, float height);
+//TODO TRASLATE RELATIVE
 void square_traslate(Square* square, float x, float y);
 void square_rotate(Square* square, float angle);
 

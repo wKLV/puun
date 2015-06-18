@@ -1,15 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
-#include <SDL/SDL.h>
-#include <GL/glew.h>
-#ifdef JS
-#include <emscripten.h>
-#endif
 
 #include "../puun/puun.h"
+#include "../puun/types.h"
 #include "../puun/gf/square.c"
-#define STB_IMAGE_IMPLEMENTATION
 #include "../other/stb_image.h"
 
 #define TAU 6.2832
@@ -95,7 +90,7 @@ void render() {
     data[1].texnum = 0;
     square_render(program, 4, data, 3);
 
-    SDL_GL_SwapBuffers();
+    puun_SWAP_BUFFERS();
 }
 
 

@@ -8,8 +8,8 @@
 #endif
 
 #include "../puun/puun.h"
-#include "../puun/gf/square2.c"
-#define STB_IMAGE_IMPLEMENTATION
+#include "../puun/gf/square.h"
+#include "../puun/gf/gl_help.h"
 #include "../other/stb_image.h"
 
 #ifndef ASSETSPATH
@@ -53,7 +53,7 @@ void render() {
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
 
-    SDL_GL_SwapBuffers();
+    puun_SWAP_BUFFERS();
 }
 
 static Data buffer;

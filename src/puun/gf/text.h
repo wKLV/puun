@@ -1,3 +1,5 @@
+#ifndef puuntexth
+#define puuntexth
 #include "../types.h"
 
 typedef struct {
@@ -16,9 +18,6 @@ struct gfFontData {
     u32 glBuffer;
 };
 
-struct gfFontData gfTextStyles[255] = {0};
-u8 gfTextStyles_length = 0;
-
 typedef struct {
     BBox bbox;
     char* text;
@@ -33,3 +32,4 @@ BBox gfTextNeeded(char* text, gf_textStyle style);
 bool gfTextFit(gfText text);
 
 void gfTextRender(gfText text);
+#endif

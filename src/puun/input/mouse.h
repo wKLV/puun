@@ -5,6 +5,7 @@ typedef enum puun_MouseClick {
     puun_LEFT_CLICK = 1,
     puun_RIGHT_CLICK = 1 << 1,
     puun_MIDDLE_CLICK = 1 << 2,
+    puun_CLICK = puun_LEFT_CLICK | puun_RIGHT_CLICK | puun_MIDDLE_CLICK,
     puun_DOUBLE_CLICK = 1 << 3,
     puun_A_ACTION = 1 << 4,
     puun_B_ACTION = 1<< 5,

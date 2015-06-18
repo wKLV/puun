@@ -7,7 +7,7 @@
 #endif
 
 #include "../puun/puun.h"
-#include "../puun/gf/sprite.c"
+#include "../puun/gf/sprite.h"
 
 #ifndef ASSETSPATH
 #define ASSETSPATH(name) "../assets/" # name
