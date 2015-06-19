@@ -38,6 +38,7 @@ SpriteList sprites;
 Square* ball;
 gfText text;
 Data buffer;
+
 void init() {
     running = true;
     buffer = malloc(1024);
@@ -58,7 +59,7 @@ void init() {
     paddle.u2 = 256.0/512;
 
     paddle.position.x = p2v(100);
-    paddle.position.y = p2v(700);
+    paddle.position.y = p2v(100);
     paddle.v1= 100.0/256;
     paddle.v2 = 150.0/256;
     squares[0] = paddle;
@@ -79,14 +80,14 @@ void init() {
     ball_.v2 = 128.0/256;
     squares[2] = ball_;
     ball = &squares[2];
-    sprites.squareList.squares_length = 5;
+    sprites.squareList.squares_length = 3;
 
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(1);
 
 
-    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Light.ttf), 15., 0);
+    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Medium.ttf), 15., 0);
     BBox bbox = {0, 0, 512, 512};
     text.bbox = bbox;
     text.text = malloc(20*sizeof(char));
@@ -109,7 +110,7 @@ bool32 hasCollided(Square a, Square b) {
     float topB = b.position.y - b.height*0.5;
     float bottomB = b.position.y + b.height*0.5;
 
-    return ( leftA < rightA && rightA > leftB &&
+    return ( leftA < rightB && rightA > leftB &&
             topA < bottomB && bottomA > topB);
 }
 
@@ -136,42 +137,25 @@ void update() {
     getKeyboardKey(&key);
     getMouseClick(&mouse);
 
-#if 0
+
     //PADDLES
-    Square* paddle, *paddle2; int dir =0;
+    Square* paddle; int dir =0;
     if(key.isPressed){ switch(key.key) {
             case 'q': {
                 paddle = &sprites.squareList.squares[0];
-                paddle2 = &sprites.squareList.squares[2];
-                dir = 1;
             }; break;
             case 'w': {
                 paddle = &sprites.squareList.squares[1];
-                paddle2 = &sprites.squareList.squares[3];
-                dir = -1;
-            }; break;
-            case 'a': {
-                paddle = &sprites.squareList.squares[2];
-                paddle2 = &sprites.squareList.squares[0];
-                dir = 1;
-            }; break;
-            case 's': {
-                paddle = &sprites.squareList.squares[3];
-                paddle2 = &sprites.squareList.squares[1];
-                dir = -1;
             }; break;
             default: goto ball;
         }
-        float x = paddle->position.x + dir*0.05;
+        float x = paddle->position.x + 0.05;
         if(x>1.0) x=-1.0;
         else if(x<-1.0) x=1.0;
         square_traslate(paddle, x, paddle->position.y);
-        square_rotate(paddle2, paddle2->position.rotation+0.1);
     }
     // BALL
     ball:
-#endif
-
     lastPos = ball->position;
     if(mouse & puun_CLICK) {
         if(!startMoving) {
