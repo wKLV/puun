@@ -129,7 +129,7 @@ void init() {
     glDepthMask(1);
 
     scaleMatrix(0.2, paddleMatrix);
-    loadnPlaySound(ASSETSPATH(ancient.mp3));
+    loadnPlaySound(ASSETSPATH(ancient.ogg));
 }
 
 float s2p(int screen) {

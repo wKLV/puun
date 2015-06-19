@@ -6,6 +6,13 @@
 #include <emscripten.h>
 #endif
 
+#ifdef WDS
+#define printf(format, value) \
+    {FILE* wdsoutputfile = fopen("log.txt", "a");\
+    fprintf(wdsoutputfile, (format), (value));\
+    fclose(wdsoutputfile);}
+#endif
+
 #include "sdl_puun.h"
 Mix_Music* music = NULL;
 
@@ -46,7 +53,7 @@ int main() {
     SDL_WM_SetCaption("Firsty puun", NULL);
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n", 0);
-    Mix_Init(MIX_INIT_MP3|MIX_INIT_OGG);
+//    Mix_Init(MIX_INIT_MOD|MIX_INIT_MP3|MIX_INIT_OGG);
     glewInit();
     printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
     init();
