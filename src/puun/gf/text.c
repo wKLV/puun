@@ -4,6 +4,9 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../../other/stb_truetype.h"
 
+struct gfFontData gfTextStyles[255] = {0};
+u8 gfTextStyles_length = 0;
+
 
 gf_textStyle initTextStyle(char* font_pos,
         f32 pixels, u32 color) {
@@ -192,6 +195,7 @@ void gfTextRender(gfText gfText) {
     glBindBuffer(GL_ARRAY_BUFFER, fontData.glBuffer);
     glBufferData(GL_ARRAY_BUFFER, length*6*stride,
             vertex, GL_DYNAMIC_DRAW);
+    free(vertex);
     glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE,
             stride, 0);
     glEnableVertexAttribArray(pos);

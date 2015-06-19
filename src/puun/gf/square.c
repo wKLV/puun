@@ -1,4 +1,4 @@
-#include "gl_help.c"
+#include "gl_help.h"
 #include "square.h"
 
 static GLuint vertexBuffer,

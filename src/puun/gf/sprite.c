@@ -1,7 +1,8 @@
 #include "sprite.h"
 //#include <assert.h>
 #include <stdio.h>
-#include "gl_help.c"
+#include <stdlib.h>
+#include "gl_help.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../../other/stb_image.h"
 #include "square2.c"

@@ -6,8 +6,8 @@
 #include <emscripten.h>
 #endif
 
-#include "sdl_puun.h"
-#include "../puun/gf/sprite.c"
+#include "../puun/puun.h"
+#include "../puun/gf/sprite.h"
 
 #ifndef ASSETSPATH
 #define ASSETSPATH(name) "../assets/" # name

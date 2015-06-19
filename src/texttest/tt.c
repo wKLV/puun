@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <assert.h>
+#include <GL/glew.h>
 
-//#include "../other/stb_truetype.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../other/stb_image_write.h"
 
-#include "sdl_puun.h"
-#include "../puun/gf/square2.c"
-#include "../puun/gf/text.c"
+#include "../other/stb_truetype.h"
+
+#include "../puun/puun.h"
+#include "../puun/gf/gl_help.h"
+#include "../puun/gf/square.h"
+#include "../puun/gf/text.h"
 
 
 #ifndef ASSETSPATH
@@ -46,7 +49,7 @@ void init(){
     BBox bbox = {0, 0, 512, 512};
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
-    text.text = "HELLO WORLD      jump line";
+    text.text = "HELLO WORLD      from the other side";
     text.style = style;
 
 
@@ -115,7 +118,7 @@ void render(){
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
 
-    SDL_GL_SwapBuffers();
+    puun_SWAP_BUFFERS();
 }
 
 void die(){

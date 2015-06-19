@@ -7,9 +7,9 @@
 #include <emscripten.h>
 #endif
 
-#include "sdl_puun.h"
-#include "../puun/gf/square2.c"
-#define STB_IMAGE_IMPLEMENTATION
+#include "../puun/puun.h"
+#include "../puun/gf/square.h"
+#include "../puun/gf/gl_help.h"
 #include "../other/stb_image.h"
 
 #ifndef ASSETSPATH
@@ -53,7 +53,7 @@ void render() {
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
 
-    SDL_GL_SwapBuffers();
+    puun_SWAP_BUFFERS();
 }
 
 static Data buffer;
@@ -126,13 +126,13 @@ void bounce(float wallDegree, float* vx, float* vy, float* av, float incVel) {
 static int score = 0;
 static float  paddleX =0, paddleY=-.8, paddleRot;
 
-void updateMouse(int x, int y) {
-    paddleX = s2p(x);
-    paddleRot = s2p(y);
-}
-
-
 void update(){
+    {
+        float x, y;
+        getMousePosition(&x, &y);
+        paddleX = s2p(x);
+        paddleRot = s2p(y);
+    }
     static float rotate = 0;
     static float vx = 0, vy = -1, px = 0, py = 0, av =0;
     static char hasBounced = 0;

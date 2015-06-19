@@ -50,87 +50,87 @@ void squareList_update_pos(SquareList sl, Data d) {
         float try = - si*rx + co*ty + s.position.y;
         { // Vertex Bottom Left
             //pos
-            data[dataI] = blx; dataI++;
-            data[dataI] = bly; dataI++;
-            data[dataI] = 0.; dataI++;
+            data[dataI++] = blx;
+            data[dataI++] = bly;
+            data[dataI++] = 0.;
 
             //uv
-            data[dataI] = s.u1; dataI++;
-            data[dataI] = s.v2; dataI++;
+            data[dataI++] = s.u1;
+            data[dataI++] = s.v2;
 
             //scale
-            data[dataI] = 1.; dataI++;
-            data[dataI] = 1.; dataI++;
+            data[dataI++] = 1.;
+            data[dataI++] = 1.;
         }
         { // Vertex Bottom Right
             //pos
-            data[dataI] = brx; dataI++;
-            data[dataI] = bry; dataI++;
-            data[dataI] = s.position.z; dataI++;
+            data[dataI++] = brx;
+            data[dataI++] = bry;
+            data[dataI++] = s.position.z;
 
             //uv
-            data[dataI] = s.u2; dataI++;
-            data[dataI] = s.v2; dataI++;
+            data[dataI++] = s.u2;
+            data[dataI++] = s.v2;
 
             //scale
-            data[dataI] = 1.; dataI++;
-            data[dataI] = 1.; dataI++;
+            data[dataI++] = 1.;
+            data[dataI++] = 1.;
         }
         { // Vertex Top Left
             //pos
-            data[dataI] = tlx; dataI++;
-            data[dataI] = tly; dataI++;
-            data[dataI] = s.position.z; dataI++;
+            data[dataI++] = tlx;
+            data[dataI++] = tly;
+            data[dataI++] = s.position.z;
 
             //uv
-            data[dataI] = s.u1; dataI++;
-            data[dataI] = s.v1; dataI++;
+            data[dataI++] = s.u1;
+            data[dataI++] = s.v1;
 
             //scale
-            data[dataI] = 1.; dataI++;
-            data[dataI] = 1.; dataI++;
+            data[dataI++] = 1.;
+            data[dataI++] = 1.;
         }
         { // Vertex Bottom Right
             //pos
-            data[dataI] = brx; dataI++;
-            data[dataI] = bry; dataI++;
-            data[dataI] = s.position.z; dataI++;
+            data[dataI++] = brx;
+            data[dataI++] = bry;
+            data[dataI++] = s.position.z;
 
             //uv
-            data[dataI] = s.u2; dataI++;
-            data[dataI] = s.v2; dataI++;
+            data[dataI++] = s.u2;
+            data[dataI++] = s.v2;
 
             //scale
-            data[dataI] = 1.; dataI++;
-            data[dataI] = 1.; dataI++;
+            data[dataI++] = 1.;
+            data[dataI++] = 1.;
         }
         { // Vertex Top Left
             //pos
-            data[dataI] = tlx; dataI++;
-            data[dataI] = tly; dataI++;
-            data[dataI] = s.position.z; dataI++;
+            data[dataI++] = tlx;
+            data[dataI++] = tly;
+            data[dataI++] = s.position.z;
 
             //uv
-            data[dataI] = s.u1; dataI++;
-            data[dataI] = s.v1; dataI++;
+            data[dataI++] = s.u1;
+            data[dataI++] = s.v1;
 
             //scale
-            data[dataI] = 1.; dataI++;
-            data[dataI] = 1.; dataI++;
+            data[dataI++] = 1.;
+            data[dataI++] = 1.;
         }
         { // Vertex Top Right
             //pos
-            data[dataI] = trx; dataI++;
-            data[dataI] = try; dataI++;
-            data[dataI] = s.position.z; dataI++;
+            data[dataI++] = trx;
+            data[dataI++] = try;
+            data[dataI++] = s.position.z;
 
             //uv
-            data[dataI] = s.u2; dataI++;
-            data[dataI] = s.v1; dataI++;
+            data[dataI++] = s.u2;
+            data[dataI++] = s.v1;
 
             //scale
-            data[dataI] = 1.; dataI++;
-            data[dataI] = 1.; dataI++;
+            data[dataI++] = 1.;
+            data[dataI++] = 1.;
         }
     }
 

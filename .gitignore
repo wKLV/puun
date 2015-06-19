@@ -7,6 +7,10 @@
 *.pdb
 build
 
+## tags and types stuff
+tags
+*taghl
+
 *.tmp
 
 ## OS & work environments

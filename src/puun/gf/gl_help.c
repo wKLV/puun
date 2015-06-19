@@ -1,32 +1,8 @@
 #ifndef gl_helpc
 #define gl_helpc
+#include "gl_help.h"
 
-#include <GL/glew.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-enum dataStructure {
-    One,
-    Vec2,
-    Vec3,
-    Vec4,
-    M2,
-    M3,
-    M4,
-    Texture
-};
-
-typedef struct {
-    char* name;
-    enum dataStructure dataStructure;
-    GLenum dataType;
-    void* data;
-    int texnum;
-    GLuint id;
-} UniformData;
-
-static void show_info_log(
+void show_info_log(
             GLuint object,
             PFNGLGETSHADERIVPROC glGet__iv,
             PFNGLGETSHADERINFOLOGPROC glGet__InfoLog

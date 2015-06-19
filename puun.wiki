@@ -11,9 +11,10 @@
     * [ ] Text rendering
         * A letter renderd FYEAH!
         * [.] A lib (gf/text?) to render text ala render_squares
-    * [.] Sound
+    * [o] Sound
+        * [ ] Music support somehow?
         * Work f*ker
-    * [o] Input
+    * [O] Input
         * [o] getKey()
         * [o] getPosition
         * [o] getClick: left, right
