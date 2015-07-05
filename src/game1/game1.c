@@ -57,12 +57,13 @@ void init() {
     paddle.height = p2vs(50);
     paddle.u1 = 0.0;
     paddle.u2 = 256.0/512;
-
     paddle.position.x = p2v(100);
     paddle.position.y = p2v(100);
     paddle.v1= 100.0/256;
     paddle.v2 = 150.0/256;
+
     squares[0] = paddle;
+
     paddle.position.x = p2v(700);
     paddle.position.y = p2v(700);
     paddle.v1= 0.0/256;
@@ -125,9 +126,17 @@ void bounce(float wallDegree, float* vx, float* vy, float incVel) {
     *vx = vvx*incVel, *vy = vvy*incVel;
 }
 
+
 Position lastPos;
 bool32 startMoving = false;
+int points0, points1;
 float velX, velY, finalX, finalY, inertia = 1, angle=0;
+
+void resetBall() {
+    finalX = 0; finalY = 0; velX = 0; velY =0;
+    square_traslateTo(ball, 0, 0);
+
+}
 void update() {
     squareList_update_pos(sprites.squareList, buffer);
     float x, y;
@@ -140,22 +149,25 @@ void update() {
 
     //PADDLES
     Square* paddle; int dir =0;
-    if(key.isPressed){ switch(key.key) {
+    if(key.isPressed){
+        bool32 isKeyAction = true;
+        switch(key.key) {
             case 'q': {
                 paddle = &sprites.squareList.squares[0];
             }; break;
             case 'w': {
                 paddle = &sprites.squareList.squares[1];
             }; break;
-            default: goto ball;
+            default: isKeyAction = false;
         }
-        float x = paddle->position.x + 0.05;
-        if(x>1.0) x=-1.0;
-        else if(x<-1.0) x=1.0;
-        square_traslate(paddle, x, paddle->position.y);
+        if(isKeyAction) {
+            float x = paddle->position.x + 0.05;
+            if(x>1.0) x=-1.0;
+            else if(x<-1.0) x=1.0;
+            square_traslateTo(paddle, x, paddle->position.y);
+        }
     }
     // BALL
-    ball:
     lastPos = ball->position;
     if(mouse & puun_CLICK) {
         if(!startMoving) {
@@ -172,30 +184,34 @@ void update() {
         }
         velX*= 0.75, velY *= 0.75;
         velX += dx; velY-= dy;
-        sprintf(text.text, "%f %f", velX, velY);
         inertia = velX*velX+velY*velY;
       //  if(inertia>0.05) finalX=velX, finalY=velY;
      //   else finalX =0, finalY=0;
         if(inertia<10.)inertia=10.;
         finalX=velX, finalY=velY;
-        square_traslate(ball, p2v(x), -p2v(y));
+        square_traslateTo(ball, p2v(x), -p2v(y));
     }
     else {
         startMoving = false;
-        square_traslate(ball, lastPos.x+finalX/inertia, lastPos.y+finalY/inertia);
+        square_traslate(ball, finalX/inertia, finalY/inertia);
     }
-    square_rotate(ball,angle+=0.01);
+    square_rotate(ball,0.01);
     if(ball->position.x<-1) bounce(-TAU/4, &finalX, &finalY, 1);
     if(ball->position.x>+1) bounce(+TAU/4, &finalX, &finalY, 1);
     int i;
+    int lastCollided = -1;
     for(i=0; i<2; i++) {
-        if(hasCollided(*ball, sprites.squareList.squares[i])) {
+        if(i != lastCollided &&
+                hasCollided(*ball, sprites.squareList.squares[i])) {
+            lastCollided = i;
             bounce(sprites.squareList.squares[i].position.rotation,
                     &finalX, &finalY, 1);
             break;
         }
     }
-    if(ball->position.y < -1) die();
+    if(ball->position.y < -1) { points0++; resetBall(); }
+    if(ball->position.y > +1) { points1++; resetBall(); }
+    sprintf(text.text, "%d / %d", points0, points1);
     lastPos = ball->position;
 }
 

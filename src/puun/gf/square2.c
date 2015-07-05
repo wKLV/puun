@@ -10,10 +10,17 @@ Square create_square(float width, float height) {
     return square;
 }
 void square_traslate(Square* square, float x, float y) {
+    square->position.x += x;
+    square->position.y += y;
+}
+void square_rotate(Square* square, float angle) {
+    square->position.rotation += angle;
+}
+void square_traslateTo(Square* square, float x, float y) {
     square->position.x = x;
     square->position.y = y;
 }
-void square_rotate(Square* square, float angle) {
+void square_rotateTo(Square* square, float angle) {
     square->position.rotation = angle;
 }
 
