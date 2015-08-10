@@ -142,9 +142,12 @@ void update() {
     float x, y;
     puun_MouseClick mouse;
     puun_KEY key;
+    u32 ticks;
     getMousePosition(&x, &y);
     getKeyboardKey(&key);
     getMouseClick(&mouse);
+    getTimeElapsed(&ticks);
+    float time = ticks / 1000.f; //I Believe this is milliseconds, so I transform into seconds
 
 
     //PADDLES
@@ -161,7 +164,7 @@ void update() {
             default: isKeyAction = false;
         }
         if(isKeyAction) {
-            float x = paddle->position.x + 0.05;
+            float x = paddle->position.x + 2*time;
             if(x>1.0) x=-1.0;
             else if(x<-1.0) x=1.0;
             square_traslateTo(paddle, x, paddle->position.y);
@@ -184,7 +187,7 @@ void update() {
         }
         velX*= 0.75, velY *= 0.75;
         velX += dx; velY-= dy;
-        inertia = velX*velX+velY*velY;
+        inertia = time*(1/16.f)*velX*velX+velY*velY;
       //  if(inertia>0.05) finalX=velX, finalY=velY;
      //   else finalX =0, finalY=0;
         if(inertia<10.)inertia=10.;
@@ -211,7 +214,7 @@ void update() {
     }
     if(ball->position.y < -1) { points0++; resetBall(); }
     if(ball->position.y > +1) { points1++; resetBall(); }
-    sprintf(text.text, "%d / %d", points0, points1);
+    sprintf(text.text, "%d / %d : %d", points0, points1, ticks);
     lastPos = ball->position;
 }
 

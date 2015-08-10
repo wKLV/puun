@@ -5,6 +5,7 @@
 #ifdef JS
 #include <emscripten.h>
 #endif
+#include "types.h"
 
 void puun_SWAP_BUFFERS() {
     SDL_GL_SwapBuffers();
@@ -123,6 +124,13 @@ void getKeyboardKey(puun_KEY* character) {
 }
 void getMouseClick(puun_MouseClick* click) {
     *click = isMouseClick;
+}
+
+u32 ticks;
+void getTimeElapsed(u32* time) {
+    u32 nextTicks = SDL_GetTicks();
+    *time = nextTicks - ticks;
+    ticks = nextTicks;
 }
 
 Mix_Music* music[512];
