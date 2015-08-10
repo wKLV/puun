@@ -56,44 +56,6 @@ void rotateMatrix(float a, float* matrix) {
     matrix[4] = c;
 }
 
-void render() {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-    UniformData data[3] = {0};
-
-    UniformData uni = {0};
-    uni.name = "world";
-    uni.dataStructure = M3;
-    uni.dataType = GL_FLOAT;
-    uni.data = paddleMatrix;
-
-    UniformData uniImg = {0};
-    uniImg.name = "texture";
-    uniImg.dataStructure = Texture;
-    uniImg.texnum = 0;
-    uniImg.id = paddleId;
-
-    float depth = 0.9;
-    data[2].name = "depth";
-    data[2].dataStructure = One;
-    data[2].dataType = GL_FLOAT;
-    data[2].data = &depth;
-
-    data[0] = uni;
-    data[1] = uniImg;
-
-    square_render(program, 4, data, 3);
-    data[0].data = ballMatrix;
-    depth=0;
-    data[1].id = ballId;
-    data[1].texnum = 0;
-    square_render(program, 4, data, 3);
-
-    puun_SWAP_BUFFERS();
-}
-
-
 void init() {
     running = true;
     square_init();
@@ -155,11 +117,15 @@ void updateMouse(int x, int y) {
     paddleRot = s2p(y);
 }
 
-void update(){
+void updateNrender(){
     puun_KEY key;
     getKeyboardKey(&key);
     float x, y;
+    float time;
+    u32 ms;
     getMousePosition(&x, &y);
+    getTimeElapsed(&ms);
+    time = ms /1000.f;
     paddleX = s2p(x);
     paddleRot = s2p(y);
     if(key.isPressed && key.key == 'p')
@@ -168,8 +134,8 @@ void update(){
     static float vx = 0, vy = -1, px = 0, py = 0, av =0;
     static char hasBounced = 0;
 
-    rotate += av*.01;
-    px += 0.01*vx, py += 0.01*vy;
+    rotate += av*1*time;
+    px += 1*vx*time, py += 1*vy*time;
     rotateMatrix(rotate, ballMatrix);
     scaleMatrix(0.08, ballMatrix);
     traslateMatrix(px, py, ballMatrix);
@@ -190,7 +156,40 @@ void update(){
         hasBounced = 4;
         score++;
     }
-    render();
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    UniformData data[3] = {0};
+
+    UniformData uni = {0};
+    uni.name = "world";
+    uni.dataStructure = M3;
+    uni.dataType = GL_FLOAT;
+    uni.data = paddleMatrix;
+
+    UniformData uniImg = {0};
+    uniImg.name = "texture";
+    uniImg.dataStructure = Texture;
+    uniImg.texnum = 0;
+    uniImg.id = paddleId;
+
+    float depth = 0.9;
+    data[2].name = "depth";
+    data[2].dataStructure = One;
+    data[2].dataType = GL_FLOAT;
+    data[2].data = &depth;
+
+    data[0] = uni;
+    data[1] = uniImg;
+
+    square_render(program, 4, data, 3);
+    data[0].data = ballMatrix;
+    depth=0;
+    data[1].id = ballId;
+    data[1].texnum = 0;
+    square_render(program, 4, data, 3);
+
+    puun_SWAP_BUFFERS();
 }
 
 void die() {

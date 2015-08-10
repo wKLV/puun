@@ -3,9 +3,6 @@
 #include <math.h>
 #include <SDL/SDL.h>
 #include <GL/glew.h>
-#ifdef JS
-#include <emscripten.h>
-#endif
 
 #include "../puun/puun.h"
 #include "../puun/gf/square.h"
@@ -37,30 +34,10 @@ u8 program;
 static GLuint ImageId;
 static u8* Image;
 
-void render() {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-    UniformData uniImg = {0};
-    uniImg.name = "texture";
-    uniImg.dataStructure = Texture;
-    uniImg.texnum = 0;
-    uniImg.id = ImageId;
-
-
-    render_squareList(Squares, (Data)&uniImg, 1);
-    //uniImg.id = ballId;
-    //uniImg.texnum = 0;
-    //render_squareList(Squares, (Data)&uniImg, 1);
-
-    puun_SWAP_BUFFERS();
-}
-
 static Data buffer;
 
 void init() {
     running = true;
-    Data d = malloc(4*sizeof(Square));
     buffer = malloc(4000);
         char vertexSource[] = "attribute vec3 position;\n\
                                attribute vec2 uv;\n\
@@ -124,26 +101,30 @@ void bounce(float wallDegree, float* vx, float* vy, float* av, float incVel) {
 }
 
 static int score = 0;
-static float  paddleX =0, paddleY=-.8, paddleRot;
+static float paddleX =0, paddleY=-.8, paddleRot;
 
-void update(){
+static float rotate = 0;
+static float vx = 0, vy = -1, px = 0, py = 0, av =0;
+static char hasBounced = 0;
+void updateNrender(){
+    float time;
     {
         float x, y;
+        u32 ms;
         getMousePosition(&x, &y);
         paddleX = s2p(x);
         paddleRot = s2p(y);
+        getTimeElapsed(&ms);
+        time = ms /1000.f;
     }
-    static float rotate = 0;
-    static float vx = 0, vy = -1, px = 0, py = 0, av =0;
-    static char hasBounced = 0;
 
-    rotate += av*.01;
-    px += 0.01*vx, py += 0.01*vy;
-    square_rotate(ball, rotate);
-    square_traslate(ball, px, py);
+    rotate += av*time*1;
+    px += 1*time*vx, py += 1*time*vy;
+    square_rotateTo(ball, rotate);
+    square_traslateTo(ball, px, py);
 
-    square_traslate(paddle, paddleX, paddleY);
-    square_rotate(paddle, paddleRot);
+    square_traslateTo(paddle, paddleX, paddleY);
+    square_rotateTo(paddle, paddleRot);
 
     squareList_update_pos(Squares, buffer);
 
@@ -159,6 +140,25 @@ void update(){
         hasBounced = 4;
         score++;
     }
+
+
+
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    UniformData uniImg = {0};
+    uniImg.name = "texture";
+    uniImg.dataStructure = Texture;
+    uniImg.texnum = 0;
+    uniImg.id = ImageId;
+
+
+    render_squareList(Squares, (Data)&uniImg, 1);
+    //uniImg.id = ballId;
+    //uniImg.texnum = 0;
+    //render_squareList(Squares, (Data)&uniImg, 1);
+
+    puun_SWAP_BUFFERS();
 }
 
 void die() {

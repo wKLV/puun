@@ -137,7 +137,7 @@ void resetBall() {
     square_traslateTo(ball, 0, 0);
 
 }
-void update() {
+void updateNrender() {
     squareList_update_pos(sprites.squareList, buffer);
     float x, y;
     puun_MouseClick mouse;
@@ -216,9 +216,7 @@ void update() {
     if(ball->position.y > +1) { points1++; resetBall(); }
     sprintf(text.text, "%d / %d : %d", points0, points1, ticks);
     lastPos = ball->position;
-}
 
-void render() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     renderSpriteList(sprites);

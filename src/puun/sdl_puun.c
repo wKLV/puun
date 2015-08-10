@@ -112,8 +112,7 @@ void sdl_update() {
             }
         }
     }
-    update();
-    render();
+    updateNrender();
 }
 void getMousePosition(float* x, float* y) {
     *x = mousePositionX;

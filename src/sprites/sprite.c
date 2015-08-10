@@ -36,20 +36,6 @@ u8 program;
 static GLuint ImageId;
 static u8* Image;
 
-void render() {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-    renderSpriteList(Sprites);
-    //uniImg.id = ballId;
-    //uniImg.texnum = 0;
-    //render_squareList(Squares, (Data)&uniImg, 1);
-
-
-    puun_SWAP_BUFFERS();
-    //SDL_GL_SwapBuffers();
-}
-
 static Data buffer;
 
 void init() {
@@ -109,8 +95,12 @@ void updateMouse(int x, int y) {
 }
 
 
-void update(){
+void updateNrender(){
     float a, b;
+    float time;
+    u32 ms;
+    getTimeElapsed(&ms);
+    time = ms / 1000.f;
     getMousePosition(&a, &b);
     paddleX = s2p(a);
     paddleRot = s2p(b);
@@ -118,13 +108,13 @@ void update(){
     static float vx = 0, vy = -1, px = 0, py = 0, av =0;
     static char hasBounced = 0;
 
-    rotate += av*.01;
-    px += 0.01*vx, py += 0.01*vy;
-    square_rotate(ball, rotate);
-    square_traslate(ball, px, py);
+    rotate += av*time;
+    px += time*vx, py += time*vy;
+    square_rotateTo(ball, rotate);
+    square_traslateTo(ball, px, py);
 
-    square_traslate(paddle, paddleX, paddleY);
-    square_rotate(paddle, paddleRot);
+    square_traslateTo(paddle, paddleX, paddleY);
+    square_rotateTo(paddle, paddleRot);
 
     squareList_update_pos(Sprites.squareList, buffer);
 
@@ -147,6 +137,21 @@ void update(){
     if(click)
         printf("MOUSE CLICKED\n", 0);
     if(key.isPressed) printf("%c\n", key.key);
+
+
+
+
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+    renderSpriteList(Sprites);
+    //uniImg.id = ballId;
+    //uniImg.texnum = 0;
+    //render_squareList(Squares, (Data)&uniImg, 1);
+
+
+    puun_SWAP_BUFFERS();
+    //SDL_GL_SwapBuffers();
 }
 
 void die() {

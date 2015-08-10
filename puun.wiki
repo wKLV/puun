@@ -18,6 +18,7 @@
         * [o] getKey()
         * [o] getPosition
         * [o] getClick: left, right
+        * [o] time
         * [ ] html workaraound if needed
     * [ ] Entity system
         * purrhaps not required? :3
@@ -35,6 +36,10 @@
     * [ ] 3D graphics
         * Amazing
 ==bugs / fixes==
+    * [X] Game1 ran at different speeds in different computers depending
+        on clock speed. Now the puun.h layer supoorts a getTimeElapsed
+        that returns ms from the last call, which should do the trick
+        for the time being.
     * [X] Textytest sometimes the character appears rotated?
         * It had to do with initialization of square. I did not
          initialize rotation, so if the memory was not 0 previously,
@@ -43,9 +48,13 @@
         * [X] sdl_swapbuffers
         * [X] platform callbacks...
 ==ideas==
+    * [ ] Crazy handmade like development tricks
+        * [ ] hot loading for linux
+        * [ ] Arena allocation
     * [ ] Screen vs Virtual coordinate system
     * [ ] Description text for initialization
         * [ ] Simple to write, perhaps bakeable?
+        * STUPID IDEA STUPID STUPID STUPID
             * #define SPRITE_X 50\n #define SPRITE_Y 51
                 * We define the macro to use it like #define SPRITE_X getX("sprite")
                 * * Read wold be just scanf("#define blabla%s %s\n", foo, bar)
