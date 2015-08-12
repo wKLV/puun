@@ -33,9 +33,11 @@
         * [ ] Mobiles
             * [ ] Android
             * [ ] IOS
+    * [ ] Physics?
     * [ ] 3D graphics
         * Amazing
 ==bugs / fixes==
+    * [ ] Remake game1 with proper 2d physics
     * [X] Game1 ran at different speeds in different computers depending
         on clock speed. Now the puun.h layer supoorts a getTimeElapsed
         that returns ms from the last call, which should do the trick

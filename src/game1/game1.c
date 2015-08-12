@@ -214,7 +214,7 @@ void updateNrender() {
     }
     if(ball->position.y < -1) { points0++; resetBall(); }
     if(ball->position.y > +1) { points1++; resetBall(); }
-    sprintf(text.text, "%d / %d : %d", points0, points1, ticks);
+    sprintf(text.text, "%d / %d : %dms", points0, points1, ticks);
     lastPos = ball->position;
 
     glClearColor(1.0, 1.0, 1.0, 1.0);

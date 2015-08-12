@@ -25,22 +25,27 @@ void init() {
                      gl_Position=vec4(position, 0, 1);\n\
                     texcoord=uv;}";
     char fs[] = "precision mediump float; \n\
+                 uniform sampler2D texture; \n\
                  varying vec2 texcoord; \n\
                  void main() {\n\
                      gl_FragColor = texture2D(texture, texcoord);\n\
                  }";
 
-    u8 program = setupProgram(vs, 0, fs, 0);
+    u32 program = setupProgram(vs, 0, fs, 0);
 
-    SquareList sl = create_square_list(
-            program, malloc(100*sizeof(Square)));
-
-}
-void update() {
+    SquareList sl = create_square_list(program, malloc(100*sizeof(Square)));
 
 }
 
-void render() {
+void updateNrender() {
+    puun_KEY character;
+    getKeyboardKey(&character);
+    if(character.isPressed) {
+        bool isF4 = (character.key == 115) && (character.alt & puun_ALT);
+        running = !isF4;
+    }
+
+
     glClearColor(1,1,1,1);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     puun_SWAP_BUFFERS();
