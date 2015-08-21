@@ -34,9 +34,9 @@ typedef ARRAY_DEFINE(Data) DataArray;
 
 // gx types
 typedef struct {
-    u32 x;
-    u32 y;
-    u32 w;
-    u32 h;
+    f32 x;
+    f32 y;
+    f32 w;
+    f32 h;
 } BBox;
 #endif

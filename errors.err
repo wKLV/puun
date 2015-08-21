@@ -1,0 +1,179 @@
+src/puun/sdl_puun.c: In function ‘main’:
+src/puun/sdl_puun.c:155:5: warning: too many arguments for format [-Wformat-extra-args]
+     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n", 0);
+     ^
+In file included from src/puun/gf/square2.c:2:0,
+                 from src/puun/gf/sprite.c:8,
+                 from src/puun/sdl_puun.c:170:
+src/puun/gf/gl_help.c: In function ‘setupProgram’:
+src/puun/gf/gl_help.c:33:9: warning: too many arguments for format [-Wformat-extra-args]
+         printf("Failed to compile vertex shader\n", 0); // FIX Hack to get wds printf
+         ^
+In file included from src/puun/sdl_puun.c:171:0:
+src/puun/gf/text.c: In function ‘initTextStyle’:
+src/puun/gf/text.c:32:11: warning: assignment makes integer from pointer without a cast [enabled by default]
+     for(c = "A", lastPos=0; c<"z"; c++) {
+           ^
+src/puun/gf/text.c:32:30: warning: comparison between pointer and integer [enabled by default]
+     for(c = "A", lastPos=0; c<"z"; c++) {
+                              ^
+src/puun/gf/text.c:33:9: error: unknown type name ‘i32’
+         i32 ix0, ix1, iy0, iy1;
+         ^
+src/puun/gf/text.c:36:9: warning: passing argument 1 of ‘stbtt_GetCodepointBitmapBox’ from incompatible pointer type [enabled by default]
+         stbtt_GetCodepointBitmapBox(&data->font, c, pixels, pixels, &ix0, &iy0, &ix1, &iy1);
+         ^
+In file included from src/puun/gf/text.c:5:0,
+                 from src/puun/sdl_puun.c:171:
+src/puun/gf/../../other/stb_truetype.h:1548:16: note: expected ‘const struct stbtt_fontinfo *’ but argument is of type ‘void **’
+ STBTT_DEF void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo *font, int codepoint, float scale_x, float scale_y, int *ix0, int *iy0, int *ix1, int *iy1)
+                ^
+In file included from src/puun/sdl_puun.c:171:0:
+src/puun/gf/text.c:37:9: error: unknown type name ‘i32’
+         i32 width = - ix0 + ix1;
+         ^
+src/puun/gf/text.c:38:9: error: unknown type name ‘i32’
+         i32 height = - iy0 + iy1;
+         ^
+src/puun/gf/text.c:39:9: warning: passing argument 1 of ‘stbtt_MakeCodepointBitmap’ from incompatible pointer type [enabled by default]
+         stbtt_MakeCodepointBitmap(&data->font, location, width, height, width, pixels, pixels, c);
+         ^
+In file included from src/puun/gf/text.c:5:0,
+                 from src/puun/sdl_puun.c:171:
+src/puun/gf/../../other/stb_truetype.h:1996:16: note: expected ‘const struct stbtt_fontinfo *’ but argument is of type ‘void **’
+ STBTT_DEF void stbtt_MakeCodepointBitmap(const stbtt_fontinfo *info, unsigned char *output, int out_w, int out_h, int out_stride, float scale_x, float scale_y, int codepoint)
+                ^
+In file included from src/puun/sdl_puun.c:171:0:
+src/puun/gf/text.c: In function ‘gfTextRender’:
+src/puun/gf/text.c:163:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+         vertex[i] = (u32)cd.location; i++;
+                     ^
+src/puun/gf/text.c:168:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+         vertex[i] = (u32)cd.location; i++;
+                     ^
+src/puun/gf/text.c:173:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+         vertex[i] = (u32)cd.location + cd.width; i++;
+                     ^
+src/puun/gf/text.c:178:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+         vertex[i] = (u32)cd.location + cd.width; i++;
+                     ^
+src/puun/gf/text.c:183:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+         vertex[i] = (u32)cd.location + cd.width; i++;
+                     ^
+src/puun/gf/text.c:188:21: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+         vertex[i] = (u32)cd.location; i++;
+                     ^
+src/puun/sdl_puun.c:155:105: warning: data argument not used by format string [-Wformat-extra-args]
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n", 0);
+                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ^
+In file included from src/puun/sdl_puun.c:170:
+In file included from src/puun/gf/sprite.c:8:
+In file included from src/puun/gf/square2.c:2:
+src/puun/gf/gl_help.c:33:53: warning: data argument not used by format string [-Wformat-extra-args]
+        printf("Failed to compile vertex shader\n", 0); // FIX Hack to get wds printf
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ^
+In file included from src/puun/sdl_puun.c:171:
+src/puun/gf/text.c:18:62: warning: passing 'char *' to parameter of type 'const unsigned char *' converts between pointers to integer types with different sign [-Wpointer-sign]
+    stbtt_InitFont(font, buffer, stbtt_GetFontOffsetForIndex(buffer,0));
+                                                             ^~~~~~
+src/puun/gf/../../other/stb_truetype.h:960:64: note: passing argument to parameter 'font_collection' here
+STBTT_DEF int stbtt_GetFontOffsetForIndex(const unsigned char *font_collection, int index)
+                                                               ^
+In file included from src/puun/sdl_puun.c:171:
+src/puun/gf/text.c:18:26: warning: passing 'char *' to parameter of type 'const unsigned char *' converts between pointers to integer types with different sign [-Wpointer-sign]
+    stbtt_InitFont(font, buffer, stbtt_GetFontOffsetForIndex(buffer,0));
+                         ^~~~~~
+src/puun/gf/../../other/stb_truetype.h:979:73: note: passing argument to parameter 'data2' here
+STBTT_DEF int stbtt_InitFont(stbtt_fontinfo *info, const unsigned char *data2, int fontstart)
+                                                                        ^
+In file included from src/puun/sdl_puun.c:171:
+src/puun/gf/text.c:32:11: warning: incompatible pointer to integer conversion assigning to 'char' from 'char [2]' [-Wint-conversion]
+    for(c = "A", lastPos=0; c<"z"; c++) {
+          ^ ~~~
+src/puun/gf/text.c:32:30: warning: result of comparison against a string literal is unspecified (use strncmp instead) [-Wstring-compare]
+    for(c = "A", lastPos=0; c<"z"; c++) {
+                             ^~~~
+src/puun/gf/text.c:32:30: warning: ordered comparison between pointer and integer ('int' and 'char *')
+    for(c = "A", lastPos=0; c<"z"; c++) {
+                            ~^~~~
+src/puun/gf/text.c:33:9: error: use of undeclared identifier 'i32'
+        i32 ix0, ix1, iy0, iy1;
+        ^
+src/puun/gf/text.c:36:37: warning: incompatible pointer types passing 'Data *' (aka 'void **') to parameter of type 'const stbtt_fontinfo *' (aka 'const struct stbtt_fontinfo *') [-Wincompatible-pointer-types]
+        stbtt_GetCodepointBitmapBox(&data->font, c, pixels, pixels, &ix0, &iy0, &ix1, &iy1);
+                                    ^~~~~~~~~~~
+src/puun/gf/../../other/stb_truetype.h:1548:66: note: passing argument to parameter 'font' here
+STBTT_DEF void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo *font, int codepoint, float scale_x, float scale_y, int *ix0, int *iy0, int *ix1, int *iy1)
+                                                                 ^
+In file included from src/puun/sdl_puun.c:171:
+src/puun/gf/text.c:36:70: error: use of undeclared identifier 'ix0'
+        stbtt_GetCodepointBitmapBox(&data->font, c, pixels, pixels, &ix0, &iy0, &ix1, &iy1);
+                                                                     ^
+src/puun/gf/text.c:36:76: error: use of undeclared identifier 'iy0'
+        stbtt_GetCodepointBitmapBox(&data->font, c, pixels, pixels, &ix0, &iy0, &ix1, &iy1);
+                                                                           ^
+src/puun/gf/text.c:36:82: error: use of undeclared identifier 'ix1'
+        stbtt_GetCodepointBitmapBox(&data->font, c, pixels, pixels, &ix0, &iy0, &ix1, &iy1);
+                                                                                 ^
+src/puun/gf/text.c:36:88: error: use of undeclared identifier 'iy1'
+        stbtt_GetCodepointBitmapBox(&data->font, c, pixels, pixels, &ix0, &iy0, &ix1, &iy1);
+                                                                                       ^
+src/puun/gf/text.c:37:12: error: expected ';' after expression
+        i32 width = - ix0 + ix1;
+           ^
+           ;
+src/puun/gf/text.c:37:9: error: use of undeclared identifier 'i32'
+        i32 width = - ix0 + ix1;
+        ^
+src/puun/gf/text.c:37:13: error: use of undeclared identifier 'width'
+        i32 width = - ix0 + ix1;
+            ^
+src/puun/gf/text.c:37:23: error: use of undeclared identifier 'ix0'
+        i32 width = - ix0 + ix1;
+                      ^
+src/puun/gf/text.c:37:29: error: use of undeclared identifier 'ix1'
+        i32 width = - ix0 + ix1;
+                            ^
+src/puun/gf/text.c:38:12: error: expected ';' after expression
+        i32 height = - iy0 + iy1;
+           ^
+           ;
+src/puun/gf/text.c:38:9: error: use of undeclared identifier 'i32'
+        i32 height = - iy0 + iy1;
+        ^
+src/puun/gf/text.c:38:13: error: use of undeclared identifier 'height'
+        i32 height = - iy0 + iy1;
+            ^
+src/puun/gf/text.c:38:24: error: use of undeclared identifier 'iy0'
+        i32 height = - iy0 + iy1;
+                       ^
+src/puun/gf/text.c:38:30: error: use of undeclared identifier 'iy1'; did you mean 'y1'?
+        i32 height = - iy0 + iy1;
+                             ^~~
+                             y1
+/home/cesar/tools/emsdk_portable/emscripten/master/system/include/libc/math.h:379:13: note: 'y1' declared here
+double      y1(double);
+            ^
+In file included from src/puun/sdl_puun.c:171:
+src/puun/gf/text.c:39:35: warning: incompatible pointer types passing 'Data *' (aka 'void **') to parameter of type 'const stbtt_fontinfo *' (aka 'const struct stbtt_fontinfo *') [-Wincompatible-pointer-types]
+        stbtt_MakeCodepointBitmap(&data->font, location, width, height, width, pixels, pixels, c);
+                                  ^~~~~~~~~~~
+src/puun/gf/../../other/stb_truetype.h:1996:64: note: passing argument to parameter 'info' here
+STBTT_DEF void stbtt_MakeCodepointBitmap(const stbtt_fontinfo *info, unsigned char *output, int out_w, int out_h, int out_stride, float scale_x, float scale_y, int codepoint)
+                                                               ^
+In file included from src/puun/sdl_puun.c:171:
+src/puun/gf/text.c:39:58: error: use of undeclared identifier 'width'
+        stbtt_MakeCodepointBitmap(&data->font, location, width, height, width, pixels, pixels, c);
+                                                         ^
+src/puun/gf/text.c:39:65: error: use of undeclared identifier 'height'
+        stbtt_MakeCodepointBitmap(&data->font, location, width, height, width, pixels, pixels, c);
+                                                                ^
+src/puun/gf/text.c:39:73: error: use of undeclared identifier 'width'
+        stbtt_MakeCodepointBitmap(&data->font, location, width, height, width, pixels, pixels, c);
+                                                                        ^
+src/puun/gf/text.c:41:20: error: use of undeclared identifier 'width'
+        lastPos += width * height;
+                   ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+9 warnings and 20 errors generated.
+ERROR    root: [31mcompiler frontend failed to generate LLVM bitcode, halting[0m

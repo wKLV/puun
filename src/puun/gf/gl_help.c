@@ -61,12 +61,12 @@ GLuint setupProgram(char* vertexSource, int vertexSourceSize, char* fragmentSour
 }
 
 
-GLuint setupTexture_Any(void* data, int x, int y, GLenum internalFormat, GLint format) {
+GLuint setupTexture_Any(void* data, int x, int y, GLenum internalFormat, GLint format, GLenum type) {
     GLuint id;
     glGenTextures(1, &id);
 
     glBindTexture(GL_TEXTURE_2D, id);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, x, y, 0, format, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, x, y, 0, format, type, data);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -76,7 +76,7 @@ GLuint setupTexture_Any(void* data, int x, int y, GLenum internalFormat, GLint f
 }
 
 GLuint setupTexture(void* data, int x, int y) {
-    return setupTexture_Any(data, x, y, GL_RGBA, GL_RGBA);
+    return setupTexture_Any(data, x, y, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
 void setParam(GLsizei program, UniformData data) {

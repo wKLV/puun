@@ -2,8 +2,8 @@
 #include <assert.h>
 #include <GL/glew.h>
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "../other/stb_image_write.h"
+//#define STB_IMAGE_WRITE_IMPLEMENTATION
+//#include "../other/stb_image_write.h"
 
 #include "../other/stb_truetype.h"
 
@@ -19,14 +19,13 @@
 
 //char buffer[24<<20];
 
-static SquareList Texts;
 static gfText text;
-GLuint ImageId;
 void init(){
-    u8* Image = malloc(1<<18);
-    s32 ImageWidth; s32 ImageHeight;
+//    u8* Image = malloc(1<<18);
+//    s32 ImageWidth; s32 ImageHeight;
     running = true;
     // not_main();
+#if 0
     char vertexSource[] = "attribute vec3 position;\n\
                            attribute vec2 uv;\n\
                            attribute vec2 scale;\n\
@@ -44,24 +43,29 @@ void init(){
                                  gl_FragColor = vec4(c, c, c, 0);\n\
                              }\n\
     ";
-
-    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Light.ttf), 35., 0);
-    BBox bbox = {0, 0, 512, 512};
+#endif
+    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Light.ttf), 24., 0);
+    BBox bbox = {0};
+    bbox.x = -256;
+    bbox.y = 0;
+    bbox.w = 420;
+    bbox.h = 0;
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
-    text.text = "HELLO WORLD      from the other side";
+    text.text = "HELLO WORLD         From the oTHER Side";
     text.style = style;
 
 
     printf("fit: %d\n", gfTextFit(text));
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
+    glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     gfTextRender(text);
-
+#if 0
     stbtt_fontinfo font;
-    char* buffer = malloc(1000000);
-    fread(buffer, 1, 1000000, fopen(ASSETSPATH(Ubuntu-Light.ttf), "rb"));
+    u8* buffer = malloc(1000000);
+    assert(fread(buffer, 1, 1000000, fopen(ASSETSPATH(Ubuntu-Light.ttf), "rb")));
     stbtt_InitFont(&font, buffer, 0);
     ImageWidth = 512, ImageHeight = 512;
     float scale = stbtt_ScaleForPixelHeight(&font, 35);
@@ -91,13 +95,14 @@ void init(){
     Texts.squares[0].v1 = 0; Texts.squares[0].v2 = 1;
 
     squareList_update_pos(Texts, buffer);
+#endif
 }
 
 void updateNrender(){
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+   // glClearColor(1.0, 1.0, 1.0, 1.0);
+   // glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    gfTextRender(text);
+  //  gfTextRenderChungo(text);
 //    UniformData uniImg = {0};
 //    uniImg.name = "texture";
 //    uniImg.dataStructure = Texture;
@@ -110,6 +115,10 @@ void updateNrender(){
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
 
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    gfTextRender(text);
     puun_SWAP_BUFFERS();
 }
 

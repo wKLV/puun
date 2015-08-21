@@ -9,13 +9,24 @@ typedef struct {
     //TODO Add options``
 } gf_textStyle;
 
+struct gfCharacterData {
+    f32 beggining;
+    f32 end;
+    int width;
+    int height;
+    int offsetx;
+    int offsety;
+};
+#define gf_TEXT_STRIDE (64)
+#define gf_TEXT_LENGTH (2860)
 struct gfFontData {
     Data font;
-    Data atlas;
+    u8 atlas [gf_TEXT_LENGTH][gf_TEXT_STRIDE];
     Data cdata;
     u32 textureId;
     u32 glProgram;
     u32 glBuffer;
+    struct gfCharacterData characters[255];
 };
 
 typedef struct {
@@ -31,5 +42,6 @@ BBox gfTextNeeded(char* text, gf_textStyle style);
 
 bool gfTextFit(gfText text);
 
+void gfTextRenderChungo(gfText text);
 void gfTextRender(gfText text);
 #endif
