@@ -18,10 +18,12 @@ struct gfCharacterData {
     int offsety;
 };
 #define gf_TEXT_STRIDE (64)
-#define gf_TEXT_LENGTH (2860)
+#define gf_TEXT_LENGTH (2048)
+
+typedef u8 VerticalMatrixu8 [gf_TEXT_LENGTH][gf_TEXT_STRIDE];
 struct gfFontData {
     Data font;
-    u8 atlas [gf_TEXT_LENGTH][gf_TEXT_STRIDE];
+    VerticalMatrixu8* atlas;
     Data cdata;
     u32 textureId;
     u32 glProgram;

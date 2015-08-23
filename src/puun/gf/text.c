@@ -25,16 +25,16 @@ gf_textStyle initTextStyle(u8* font_pos,
 
     struct gfFontData* data = &gfTextStyles[s.id];
     data->font = font;
-   // data->atlas = {};
+    data->atlas = calloc(sizeof(u8), gf_TEXT_LENGTH*gf_TEXT_STRIDE);
     data->cdata = malloc(96*sizeof(stbtt_bakedchar));
 
     float scale = stbtt_ScaleForPixelHeight(font, pixels);
 #if 1
     u8 c;
     u32 lastPos;
-    for(c = 0x30, lastPos=0; c<0x7a; c++) {
+    for(c = 39, lastPos=0; c<127; c++) {
         int ix0, ix1, iy0, iy1;
-        u8* location = data->atlas[lastPos];
+        u8* location = (*data->atlas)[lastPos];
         assert(lastPos<gf_TEXT_LENGTH);
         stbtt_GetCodepointBitmapBox(font, c, scale, scale, &ix0, &iy0, &ix1, &iy1);
         int width = - ix0 + ix1;
@@ -61,8 +61,8 @@ gf_textStyle initTextStyle(u8* font_pos,
             data->cdata);
 #endif
 
-    stbi_write_png("prueba", gf_TEXT_STRIDE, gf_TEXT_LENGTH, 1, data->atlas, gf_TEXT_STRIDE);
-    data->textureId = setupTexture_Any(data->atlas, gf_TEXT_STRIDE, gf_TEXT_LENGTH, GL_R8, GL_RED, GL_UNSIGNED_BYTE);
+    stbi_write_png("prueba", gf_TEXT_STRIDE, gf_TEXT_LENGTH, 1, *data->atlas, gf_TEXT_STRIDE);
+    data->textureId = setupTexture_Any(*data->atlas, gf_TEXT_STRIDE, gf_TEXT_LENGTH, GL_LUMINANCE, GL_LUMINANCE, GL_UNSIGNED_BYTE);
 //glGenTextures(1, &data->textureId);
 //glBindTexture(GL_TEXTURE_2D, data->textureId);
 //glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, gf_TEXT_STRIDE,gf_TEXT_LENGTH, 0,
@@ -72,7 +72,7 @@ gf_textStyle initTextStyle(u8* font_pos,
 
     u8 vs[] = "attribute vec2 position; attribute vec2 uv;\n\
                  varying vec2 texcoord; void main(){\n\
-                     gl_Position=vec4(position/256, 0, 1);\n\
+                     gl_Position=vec4(position/256.0, 0.0, 1.0);\n\
                     texcoord=uv;}";
     u8 fs[] = "precision mediump float; \n\
                  uniform sampler2D texture; \n\
@@ -80,10 +80,10 @@ gf_textStyle initTextStyle(u8* font_pos,
                  void main() {\n\
                      float c = texture2D(texture, texcoord).r;\n\
                        c=1.0-c;\n\
-                       gl_FragColor = vec4(c, c, c, 1.0);\n\
+                       gl_FragColor = vec4(c, c, c, 1.0-c);\n\
                 //     gl_FragColor =  texture2D(texture, texcoord).rgba;\n\
                //      gl_FragColor = vec4(texcoord, 0., 1.0);\n\
-                    // gl_FragColor = vec4(0.5, 0.75, 0.25, 1.0);\n\
+                 //      gl_FragColor = vec4(0.5, 0.75, 0.25, 1.0);\n\
                  }\n";
 
     data->glProgram = setupProgram(vs, strlen((char*)vs), fs, strlen((char*)fs));
@@ -146,7 +146,6 @@ void gfTextRender(gfText gfText) {
 
     u32 length = strlen((char*)text) +0;
     struct gfFontData fontData = gfTextStyles[style.id];
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, fontData.textureId);
 
     glUseProgram(fontData.glProgram);
