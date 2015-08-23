@@ -36,8 +36,7 @@ GLuint square_createType(u8* vertexSource, int vertexSourceSize, u8* fragmentSou
     glCompileShader(vertexShader);
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &shader_ok);
     if(shader_ok == GL_FALSE) {
-        GLsizei length = 1000;
-        printf("Failed to compile vertex shader\n", 0);
+        printf("Failed to compile vertex shader\n");
       //  printf("%s", vertexSource);
         show_info_log(vertexShader, glGetShaderiv, glGetShaderInfoLog);
         glDeleteShader(vertexShader);

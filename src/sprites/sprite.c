@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
 #include <GL/glew.h>
@@ -15,26 +16,12 @@
 
 #define TAU 6.2832
 
-static GLfloat paddleMatrix[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-};
-
-static GLfloat ballMatrix[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-};
 Square* paddle;
 Square* ball;
 SpriteList Sprites;
 SpriteSheet* sheet;
 
 u8 program;
-
-static GLuint ImageId;
-static u8* Image;
 
 static Data buffer;
 
@@ -50,7 +37,7 @@ void init() {
     glDepthMask(1);
 
 
-    Square s = {0};
+    Square s = {};
     s.width = 0.8; s.height = 0.1;
     s.u1 = 0./512; s.u2= 256./512;
     s.v1 = 0./256; s.v2 = 49./256;
@@ -135,7 +122,7 @@ void updateNrender(){
     puun_KEY key;
     getKeyboardKey(&key);
     if(click)
-        printf("MOUSE CLICKED\n", 0);
+        printf("MOUSE CLICKED\n");
     if(key.isPressed) printf("%c\n", key.key);
 
 

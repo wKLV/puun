@@ -46,12 +46,12 @@ void init() {
     sprites = spritesFromSheet(*sheet, malloc(4*sizeof(Square)));
 
     Square* squares = sprites.squareList.squares;
-    Position x = {0};
+    Position x = {};
     x.x = p2v(400);
     x.y = p2v(400);
     x.z =0;
     x.rotation =0;
-    Square paddle = {0};
+    Square paddle = {};
     paddle.position = x;
     paddle.width = p2vs(256);
     paddle.height = p2vs(50);
@@ -70,7 +70,7 @@ void init() {
     paddle.v2 = 50.0/256;
     squares[1] = paddle;
 
-    Square ball_ = {0};
+    Square ball_ = {};
     ball_.position = x;
     ball_.position.x = p2v(500);
     ball_.width = p2vs(100);
@@ -88,11 +88,11 @@ void init() {
     glDepthMask(1);
 
 
-    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Medium.ttf), 15., 0);
+    gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Medium.ttf), 15., 0);
     BBox bbox = {0, 0, 512, 512};
     text.bbox = bbox;
     text.text = malloc(20*sizeof(char));
-    strcpy(text.text, "prueba");
+    strcpy((char*)text.text, "prueba");
     text.style = style;
 }
 
@@ -151,7 +151,7 @@ void updateNrender() {
 
 
     //PADDLES
-    Square* paddle; int dir =0;
+    Square* paddle;
     if(key.isPressed){
         bool32 isKeyAction = true;
         switch(key.key) {
@@ -214,7 +214,7 @@ void updateNrender() {
     }
     if(ball->position.y < -1) { points0++; resetBall(); }
     if(ball->position.y > +1) { points1++; resetBall(); }
-    sprintf(text.text, "%d / %d : %dms", points0, points1, ticks);
+    sprintf((char*)text.text, "%d / %d : %ums", points0, points1, ticks);
     lastPos = ball->position;
 
     glClearColor(1.0, 1.0, 1.0, 1.0);

@@ -15,11 +15,7 @@
 
 static GLuint vertexBuffer,
        elementBuffer,
-       vertexShader,
-       fragmentShader,
        program;
-static GLuint positionPosition,
-              worldPosition;
 static GLfloat paddleMatrix[] = {
     1.0, 0.0, 0.0,
     0.0, 1.0, 0.0,
@@ -59,7 +55,7 @@ void rotateMatrix(float a, float* matrix) {
 void init() {
     running = true;
     square_init();
-        char vertexSource[] = "precision mediump float; attribute vec2 position;\n\
+        u8 vertexSource[] = "precision mediump float; attribute vec2 position;\n\
                                uniform mat3 world;\n\
                                uniform float depth; \n\
                                varying vec2 texcoord;\n\
@@ -67,7 +63,7 @@ void init() {
                                    gl_Position = vec4(world*(vec3(position, 1))+vec3(0,0,depth-1.), 1.0);\n\
                                    texcoord = position*vec2(0.5) +vec2(0.5);\n\
                                }";
-        char fragmentSource[] = "precision mediump float; \n\
+        u8 fragmentSource[] = "precision mediump float; \n\
                                  uniform sampler2D texture; \n\
                                 varying vec2 texcoord; \n\
                                void main() {\n\
@@ -159,22 +155,22 @@ void updateNrender(){
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData data[3] = {0};
+    UniformData data[3] = {};
 
-    UniformData uni = {0};
-    uni.name = "world";
+    UniformData uni = {};
+    uni.name = (u8*)"world";
     uni.dataStructure = M3;
     uni.dataType = GL_FLOAT;
     uni.data = paddleMatrix;
 
-    UniformData uniImg = {0};
-    uniImg.name = "texture";
+    UniformData uniImg = {};
+    uniImg.name = (u8*)"texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;
     uniImg.id = paddleId;
 
     float depth = 0.9;
-    data[2].name = "depth";
+    data[2].name = (u8*)"depth";
     data[2].dataStructure = One;
     data[2].dataType = GL_FLOAT;
     data[2].data = &depth;

@@ -44,7 +44,7 @@ void init(){
                              }\n\
     ";
 #endif
-    gf_textStyle style = initTextStyle(ASSETSPATH(comic.ttf), 24., 0);
+    gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Light.ttf), 24., 0);
     BBox bbox = {0};
     bbox.x = -256;
     bbox.y = 0;
@@ -52,7 +52,7 @@ void init(){
     bbox.h = 0;
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
-    text.text = "HELLO WORLD         From the oTHER Side";
+    text.text = (u8*)"HELLO WORLD         From the oTHER Side";
     text.style = style;
 
 

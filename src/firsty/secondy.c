@@ -15,17 +15,6 @@
 
 #define TAU 6.2832
 
-static GLfloat paddleMatrix[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-};
-
-static GLfloat ballMatrix[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-};
 Square* paddle;
 Square* ball;
 SquareList Squares;
@@ -39,7 +28,7 @@ static Data buffer;
 void init() {
     running = true;
     buffer = malloc(4000);
-        char vertexSource[] = "attribute vec3 position;\n\
+        u8 vertexSource[] = "attribute vec3 position;\n\
                                attribute vec2 uv;\n\
                                attribute vec2 scale;\n\
                                varying vec2 texcoord;\n\
@@ -47,7 +36,7 @@ void init() {
                                    gl_Position = vec4(position, 1.0);\n\
                                    texcoord = uv;\n\
                                }";
-        char fragmentSource[] = "precision mediump float; \n\
+        u8 fragmentSource[] = "precision mediump float; \n\
                                  uniform sampler2D texture; \n\
                                 varying vec2 texcoord; \n\
                                void main() {\n\
@@ -64,7 +53,7 @@ void init() {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(1);
 
-    Square s = {0};
+    Square s = {};
     s.width = 0.8; s.height = 0.1;
     s.u1 = 0./512; s.u2= 256./512;
     s.v1 = 0./256; s.v2 = 49./256;
@@ -146,8 +135,8 @@ void updateNrender(){
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData uniImg = {0};
-    uniImg.name = "texture";
+    UniformData uniImg = {};
+    uniImg.name = (u8*)"texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;
     uniImg.id = ImageId;
