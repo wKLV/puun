@@ -4,20 +4,20 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../../other/stb_truetype.h"
 
-struct gfFontData gfTextStyles[255] = {0};
+struct gfFontData gfTextStyles[255] = {};
 u8 gfTextStyles_length = 0;
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "../../other/stb_image_write.h"
 
-gf_textStyle initTextStyle(char* font_pos,
+gf_textStyle initTextStyle(u8* font_pos,
         f32 pixels, u32 color) {
-    gf_textStyle s = {0};
+    gf_textStyle s = {};
 
     stbtt_fontinfo* font= malloc(sizeof(stbtt_fontinfo));
-    char* buffer = malloc(1000000);
-    fread(buffer, 1, 1000000, fopen(font_pos, "rb"));
-    stbtt_InitFont(font, buffer, stbtt_GetFontOffsetForIndex(buffer,0));
+    u8* buffer = malloc(1000000);
+    fread((char*)buffer, 1, 1000000, fopen((char*)font_pos, "rb"));
+    stbtt_InitFont(font, buffer, stbtt_GetFontOffsetForIndex(buffer, 0U));
 
     s.id = ++gfTextStyles_length;
     s.pixels = pixels;
@@ -30,7 +30,7 @@ gf_textStyle initTextStyle(char* font_pos,
 
     float scale = stbtt_ScaleForPixelHeight(font, pixels);
 #if 1
-    char c;
+    u8 c;
     u32 lastPos;
     for(c = 0x30, lastPos=0; c<0x7a; c++) {
         int ix0, ix1, iy0, iy1;
@@ -42,7 +42,7 @@ gf_textStyle initTextStyle(char* font_pos,
         stbtt_MakeCodepointBitmap(font, location, width, height, gf_TEXT_STRIDE, scale, scale, c);
 
 
-        struct gfCharacterData ch = {0};
+        struct gfCharacterData ch = {};
         ch.beggining = lastPos*1.f / gf_TEXT_LENGTH;
         ch.end = (lastPos += height)*1.f /gf_TEXT_LENGTH;
         ch.width = width*1.f;
@@ -70,11 +70,11 @@ gf_textStyle initTextStyle(char* font_pos,
 //// can free temp_bitmap at this point
 //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    char vs[] = "attribute vec2 position; attribute vec2 uv;\n\
+    u8 vs[] = "attribute vec2 position; attribute vec2 uv;\n\
                  varying vec2 texcoord; void main(){\n\
                      gl_Position=vec4(position/256, 0, 1);\n\
                     texcoord=uv;}";
-    char fs[] = "precision mediump float; \n\
+    u8 fs[] = "precision mediump float; \n\
                  uniform sampler2D texture; \n\
                  varying vec2 texcoord; \n\
                  void main() {\n\
@@ -86,7 +86,7 @@ gf_textStyle initTextStyle(char* font_pos,
                     // gl_FragColor = vec4(0.5, 0.75, 0.25, 1.0);\n\
                  }\n";
 
-    data->glProgram = setupProgram(vs, strlen(vs), fs, strlen(fs));
+    data->glProgram = setupProgram(vs, strlen((char*)vs), fs, strlen((char*)fs));
 
     glGenBuffers(1, &data->glBuffer);
     return s;
@@ -95,18 +95,18 @@ gf_textStyle initTextStyle(char* font_pos,
 bool gfTextFit(gfText gfText) {
     gf_textStyle style = gfText.style;
     BBox bbox = gfText.bbox;
-    char* text = gfText.text;
+    u8* text = gfText.text;
     stbtt_fontinfo* font = (stbtt_fontinfo*) gfTextStyles[style.id].font;
 
     f32 scale = stbtt_ScaleForPixelHeight(
             font, style.pixels);
-    int i,j, ascent, descent, lineGap, baseline, ch=0;
+    int ascent, descent, lineGap, ch=0; // UNUSED baseline,
 
     stbtt_GetFontVMetrics(font, &ascent, &descent, &lineGap);
     f32 xpos = 0, ypos = 0;
     while(text[ch]) {
-        int advance,lsb,x0,y0,x1,y1;
-        float x_shift = xpos - (float) floor(xpos);
+        int advance,lsb;//x0,y0,x1,y1;
+        // UNUSED float x_shift = xpos - (float) floor(xpos);
         stbtt_GetCodepointHMetrics(font, text[ch],
                 &advance, &lsb);
         xpos += (advance * scale);
@@ -134,17 +134,17 @@ bool gfTextFit(gfText gfText) {
 void gfTextRender(gfText gfText) {
     gf_textStyle style = gfText.style;
     BBox bbox = gfText.bbox;
-    char* text = gfText.text;
+    u8* text = gfText.text;
     stbtt_fontinfo* font = (stbtt_fontinfo*) gfTextStyles[style.id].font;
 
     f32 scale = stbtt_ScaleForPixelHeight(
             font, style.pixels);
-    int i,j, ascent, descent, lineGap, baseline, ch=0;
+    int i, ascent, descent, lineGap; //TODO VERTICAL MOVEMENT
 
     stbtt_GetFontVMetrics(font, &ascent, &descent, &lineGap);
     f32 xpos = bbox.x, ypos = bbox.y;
 
-    u32 length = strlen(text) +0;
+    u32 length = strlen((char*)text) +0;
     struct gfFontData fontData = gfTextStyles[style.id];
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, fontData.textureId);
@@ -229,8 +229,8 @@ void gfTextRender(gfText gfText) {
         vertex[i++] = 0;
         vertex[i++] = cd.beggining;
 
-        int advance,lsb,x0,y0,x1,y1;
-        float x_shift = xpos - (float) floor(xpos);
+        int advance,lsb;//,x0,y0,x1,y1;
+        // UNUSED float x_shift = xpos - (float) floor(xpos);
         stbtt_GetCodepointHMetrics(font, *text,
                 &advance, &lsb);
         xpos += (advance * scale);
@@ -274,11 +274,11 @@ void gfTextRender(gfText gfText) {
 
     glDrawArrays(GL_TRIANGLES, 0, length*6);
 }
-
+#if 0
 void gfTextRenderChungo(gfText gfText) {
     gf_textStyle style = gfText.style;
     BBox bbox = gfText.bbox;
-    char* text = gfText.text;
+    u8* text = gfText.text;
 #if 0
     stbtt_fontinfo* font = (stbtt_fontinfo*) gfTextStyles[style.id].font;
 
@@ -298,7 +298,7 @@ void gfTextRenderChungo(gfText gfText) {
 
     int ch=0;
     f32 xpos = gfText.bbox.x, ypos = gfText.bbox.y;
-    u32 length = strlen(text);
+    u32 length = strlen((char*)text);
     float* vertex = malloc(length*4*6*sizeof(float));
     int i = 0;
 
@@ -383,7 +383,7 @@ void gfTextRenderChungo(gfText gfText) {
 
     glDrawArrays(GL_TRIANGLES, 0, length*6);
 }
-
+#endif
 
 
 // TODO Implement this

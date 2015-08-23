@@ -1,4 +1,4 @@
-ERRORS=errors.err
+ERRORS=./../errors.err
 if [ -d $ERRORS ]; then
     rm $ERRORS
 fi

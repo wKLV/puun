@@ -9,18 +9,18 @@ void show_info_log(
         )
 {
     GLint log_length;
-    char *log;
+    u8 *log;
 
     glGet__iv(object, GL_INFO_LOG_LENGTH, &log_length);
     log = malloc(log_length);
-    glGet__InfoLog(object, log_length, NULL, log);
+    glGet__InfoLog(object, log_length, NULL, (char*)log);
     fprintf(stderr, "error:\n %s\n", log);
     free(log);
 }
 
-GLuint setupProgram(char* vertexSource, int vertexSourceSize, char* fragmentSource, int fragmentSourceSize) {
-    char* vs = vertexSource;
-    char* fs = fragmentSource;
+GLuint setupProgram(u8* vertexSource, int vertexSourceSize, u8* fragmentSource, int fragmentSourceSize) {
+    u8* vs = vertexSource;
+    u8* fs = fragmentSource;
     GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     GLint shader_ok;
@@ -29,8 +29,7 @@ GLuint setupProgram(char* vertexSource, int vertexSourceSize, char* fragmentSour
     glCompileShader(vertexShader);
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &shader_ok);
     if(shader_ok == GL_FALSE) {
-        GLsizei length = 1000;
-        printf("Failed to compile vertex shader\n", 0); // FIX Hack to get wds printf
+        printf("Failed to compile vertex shader\n");
       //  printf("%s", vertexSource);
         show_info_log(vertexShader, glGetShaderiv, glGetShaderInfoLog);
         glDeleteShader(vertexShader);
@@ -80,7 +79,7 @@ GLuint setupTexture(void* data, int x, int y) {
 }
 
 void setParam(GLsizei program, UniformData data) {
-    GLint loc = glGetUniformLocation(program, data.name);
+    GLint loc = glGetUniformLocation(program, (char*)data.name);
     if((data.data == NULL && !(data.dataStructure==Texture)) || loc==-1) return;
     switch(data.dataStructure){
         case One:

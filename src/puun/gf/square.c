@@ -25,9 +25,9 @@ void square_init() {
 
 }
 
-GLuint square_createType(char* vertexSource, int vertexSourceSize, char* fragmentSource, int fragmentSourceSize) {
-    char* vs = vertexSource;
-    char* fs = fragmentSource;
+GLuint square_createType(u8* vertexSource, int vertexSourceSize, u8* fragmentSource, int fragmentSourceSize) {
+    u8* vs = vertexSource;
+    u8* fs = fragmentSource;
     GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     GLint shader_ok;

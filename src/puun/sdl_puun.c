@@ -20,11 +20,13 @@ void sdl_die() {
 #endif
     SDL_Quit();
 };
+#if 0 //This was a horrible idea //TODO: Logger
 #ifdef WDS
 #define printf(format, value) \
     {FILE* wdsoutputfile = fopen("log.txt", "a");\
     fprintf(wdsoutputfile, (format), (value));\
     fclose(wdsoutputfile);}
+#endif
 #endif
 
 static float mousePositionX;
@@ -152,7 +154,7 @@ int main() {
 #endif
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_WM_SetCaption("Puun", NULL);
-    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n", 0);
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n");
     Mix_Init(MIX_INIT_OGG);
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     glewInit();

@@ -44,7 +44,7 @@ void init(){
                              }\n\
     ";
 #endif
-    gf_textStyle style = initTextStyle(ASSETSPATH(Ubuntu-Light.ttf), 24., 0);
+    gf_textStyle style = initTextStyle(ASSETSPATH(comic.ttf), 24., 0);
     BBox bbox = {0};
     bbox.x = -256;
     bbox.y = 0;

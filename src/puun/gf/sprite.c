@@ -13,7 +13,7 @@ struct SpriteSheetData {
 };
 
 
-struct SpriteSheetData spritesheets[512] = {0};
+struct SpriteSheetData spritesheets[512] = {};
 s32 spritesheets_length = 0;
 GLuint Program;
 GLuint Buffer;
@@ -27,10 +27,10 @@ SpriteSheet* loadSpriteSheet(String loc) {
     Image = stbi_load(loc, &x, &y, &n, 0);
     ImageId = setupTexture(Image, x, y);
 
-    struct SpriteSheetData data = {0};
+    struct SpriteSheetData data = {};
     data.ImageId = ImageId;
     s32 id = spritesheets_length;
-    SpriteSheet sheet = {0};
+    SpriteSheet sheet = {};
     sheet.id = id;
     data.spritesheet = sheet;
 
@@ -40,11 +40,11 @@ SpriteSheet* loadSpriteSheet(String loc) {
 }
 
 SpriteList spritesFromSheet(SpriteSheet s, Data squares){
-    char vs[] = "attribute vec2 position; attribute vec2 uv;\n\
+    u8 vs[] = "attribute vec2 position; attribute vec2 uv;\n\
                  varying vec2 texcoord; void main(){\n\
                      gl_Position=vec4(position, 0, 1);\n\
                     texcoord=uv;}";
-    char fs[] = "precision mediump float; \n\
+    u8 fs[] = "precision mediump float; \n\
                  uniform sampler2D texture; \n\
                  varying vec2 texcoord; \n\
                  void main() {\n\
@@ -54,7 +54,7 @@ SpriteList spritesFromSheet(SpriteSheet s, Data squares){
     Program = setupProgram(vs, 0, fs, 0);
     SquareList sl = create_square_list(Program, squares);
 
-    SpriteList splist = {0};
+    SpriteList splist = {};
     splist.squareList = sl;
     splist.ImageId = spritesheets[s.id].ImageId;
     return splist;

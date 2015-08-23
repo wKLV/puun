@@ -31,14 +31,14 @@ struct gfFontData {
 
 typedef struct {
     BBox bbox;
-    char* text;
+    u8* text;
     gf_textStyle style;
 } gfText;
 
-gf_textStyle initTextStyle(char* font_pos,
+gf_textStyle initTextStyle(u8* font_pos,
         f32 pixels, u32 color);
 
-BBox gfTextNeeded(char* text, gf_textStyle style);
+BBox gfTextNeeded(u8* text, gf_textStyle style);
 
 bool gfTextFit(gfText text);
 
