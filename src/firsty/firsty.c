@@ -13,25 +13,6 @@
 #define ASSETSPATH(name) "../assets/" # name
 #endif
 
-static GLuint vertexBuffer,
-       elementBuffer,
-       program;
-static GLfloat paddleMatrix[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-};
-
-static GLfloat ballMatrix[] = {
-    1.0, 0.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0
-};
-static GLuint paddleId;
-static GLuint ballId;
-static u8* paddleImage;
-static u8* ballImage;
-
 void scaleMatrix(float a, float* matrix) {
     matrix[0] *= a;
     matrix[1] *= a;
@@ -52,7 +33,23 @@ void rotateMatrix(float a, float* matrix) {
     matrix[4] = c;
 }
 
-void init() {
+struct Game_Memory {
+    u32 vertexBuffer;
+    u32 elementBuffer;
+    u32 program;
+    float paddleMatrix[9];
+    float ballMatrix[9];
+    u32 paddleId;
+    u32 ballId;
+    float rotate;
+    float vx;
+    float vy;
+    float px;
+    float py;
+    float av;
+};
+
+void init(Data game_memory) {
     u32 ms;
     getTimeElapsed(&ms);
     square_init();
@@ -71,20 +68,23 @@ void init() {
                                gl_FragColor = texture2D(texture, texcoord);\n\
                                }\n\
                               ";
-    program = square_createType(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
+    mem->program = square_createType(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
     int x, y, n;
-    ballImage = stbi_load(ASSETSPATH(/ball.png), &x, &y, &n, 0);
-    ballId = setupTexture(ballImage, x, y);
-    paddleImage = stbi_load(ASSETSPATH(/paddle.png), &x, &y, &n, 0);
-    paddleId = setupTexture(paddleImage, x, y);
+    u8* ballImage = stbi_load(ASSETSPATH(/ball.png), &x, &y, &n, 0);
+    mem->ballId = setupTexture(ballImage, x, y);
+    u8* paddleImage = stbi_load(ASSETSPATH(/paddle.png), &x, &y, &n, 0);
+    mem->paddleId = setupTexture(paddleImage, x, y);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(1);
 
-    scaleMatrix(0.2, paddleMatrix);
+    scaleMatrix(0.2, mem->paddleMatrix);
     loadSoundFile(ASSETSPATH(bout.wav));
     loadSoundFile(ASSETSPATH(ancient.ogg));
+
+    mem->vy = -1;
 }
 
 float s2p(int screen) {
@@ -114,7 +114,9 @@ void updateMouse(int x, int y) {
     paddleRot = s2p(y);
 }
 
-void updateNrender(){
+void updateNrender(Data game_memory){
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
+
     puun_KEY key;
     getKeyboardKey(&key);
     float x, y;
@@ -127,29 +129,27 @@ void updateNrender(){
     paddleRot = s2p(y);
     if(key.isPressed && key.key == 'p')
         playSound(1);
-    static float rotate = 0;
-    static float vx = 0, vy = -1, px = 0, py = 0, av =0;
-    static char hasBounced = 0;
+    char hasBounced = 0;
 
-    rotate += av*1*time;
-    px += 1*vx*time, py += 1*vy*time;
-    rotateMatrix(rotate, ballMatrix);
-    scaleMatrix(0.08, ballMatrix);
-    traslateMatrix(px, py, ballMatrix);
+    mem->rotate += mem->v*1*time;
+    mem->px += 1*mem->vx*time, mem->py += 1*mem->vy*time;
+    rotateMatrix(mem->rotate, mem->ballMatrix);
+    scaleMatrix(0.08, mem->ballMatrix);
+    traslateMatrix(mem->px, mem->py, mem->ballMatrix);
 
-    traslateMatrix(paddleX, paddleY, paddleMatrix);
-    rotateMatrix(paddleRot, paddleMatrix);
-    scaleMatrix(0.2, paddleMatrix);
+    traslateMatrix(paddleX, paddleY, mem->paddleMatrix);
+    rotateMatrix(paddleRot, mem->paddleMatrix);
+    scaleMatrix(0.2, mem->paddleMatrix);
 
     //CHECK COLLISION :)
-    if(hasBounced!= 1 && px <-1){ bounce(TAU/4, &vx, &vy, &av, 1.);hasBounced = 1; }
-    if(hasBounced!=2 && px> 1){ bounce(-TAU/4, &vx, &vy, &av, 1.);hasBounced = 2;}
-    if(hasBounced!=3 && py >1){ bounce(-TAU/2, &vx, &vy, &av, 1.); hasBounced = 3; }
-    if(py <-1){
-        game_die(); return;
+    if(hasBounced!= 1 && mem->px <-1){ bounce(TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);hasBounced = 1; }
+    if(hasBounced!=2 && mem->px> 1){ bounce(-TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);hasBounced = 2;}
+    if(hasBounced!=3 && mem->py >1){ bounce(-TAU/2, &mem->vx, &mem->vy, &mem->av, 1.); hasBounced = 3; }
+    if(mem->py <-1){
+        game_die(game_memory); return;
     }
-    if(hasBounced!=4 && px<= paddleX+0.3 && px>=paddleX-0.2  && py<=paddleY+0.3 && py>=paddleY-0.2) {
-        bounce(3/4*TAU-paddleRot, &vx, &vy, &av, 1.2);
+    if(hasBounced!=4 && mem->px<= paddleX+0.3 && mem->px>=paddleX-0.2  && mem->py<=paddleY+0.3 && mem->py>=paddleY-0.2) {
+        bounce(3/4*TAU-paddleRot, &mem->vx, &mem->vy, &mem->av, 1.2);
         hasBounced = 4;
         score++;
     }
@@ -162,13 +162,13 @@ void updateNrender(){
     uni.name = (u8*)"world";
     uni.dataStructure = M3;
     uni.dataType = GL_FLOAT;
-    uni.data = paddleMatrix;
+    uni.data = mem->paddleMatrix;
 
     UniformData uniImg = {};
     uniImg.name = (u8*)"texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;
-    uniImg.id = paddleId;
+    uniImg.id = mem->paddleId;
 
     float depth = 0.9;
     data[2].name = (u8*)"depth";
@@ -179,17 +179,17 @@ void updateNrender(){
     data[0] = uni;
     data[1] = uniImg;
 
-    square_render(program, 4, data, 3);
-    data[0].data = ballMatrix;
+    square_render(mem->program, 4, data, 3);
+    data[0].data = mem->ballMatrix;
     depth=0;
-    data[1].id = ballId;
+    data[1].id = mem->ballId;
     data[1].texnum = 0;
-    square_render(program, 4, data, 3);
+    square_render(mem->program, 4, data, 3);
 
     puun_SWAP_BUFFERS();
 }
 
-void game_die() {
+void game_die(Data game_memory) {
     printf("YOUR SCORE IS %d\n", score);
     platform_die();
 }

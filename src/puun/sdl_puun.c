@@ -2,6 +2,7 @@
 #include <SDL/SDL_mixer.h>
 #include <GL/glew.h>
 #include <stdio.h>
+#include <stdlib.h>
 #ifdef JS
 #include <emscripten.h>
 #endif
@@ -11,6 +12,7 @@ void puun_SWAP_BUFFERS() {
     SDL_GL_SwapBuffers();
 }
 static b32 running;
+static Data game_memory;
 #include "puun.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
@@ -38,7 +40,7 @@ static puun_MouseClick isMouseClick;
 void sdl_update() {
     SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
-        if(event.type == SDL_QUIT){ game_die(); return; }
+        if(event.type == SDL_QUIT){ game_die(game_memory); return; }
         else if(event.type == SDL_MOUSEMOTION) {
             //updateMouse(event.motion.x, event.motion.y);
             //TODO: Screen vs Virtual Space
@@ -115,7 +117,7 @@ void sdl_update() {
             }
         }
     }
-    updateNrender();
+    updateNrender(game_memory);
 }
 void getMousePosition(float* x, float* y) {
     *x = mousePositionX;
@@ -160,7 +162,8 @@ int main() {
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     glewInit();
     printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
-    init();
+    game_memory = calloc(1, 1<<12);
+    init(game_memory);
     running = true;
     #ifdef JS
         emscripten_set_main_loop(sdl_update, 0, 0);

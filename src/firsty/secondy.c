@@ -25,7 +25,7 @@ static u8* Image;
 
 static Data buffer;
 
-void init() {
+void init(Data game_memory) {
     u32 ms;
     getTimeElapsed(&ms);
     buffer = malloc(4000);
@@ -96,7 +96,7 @@ static float paddleX =0, paddleY=-.8, paddleRot;
 static float rotate = 0;
 static float vx = 0, vy = -1, px = 0, py = 0, av =0;
 static char hasBounced = 0;
-void updateNrender(){
+void updateNrender(Data game_memory){
     float time;
     {
         float x, y;
@@ -123,7 +123,7 @@ void updateNrender(){
     if(hasBounced!=2 && px> 1){ bounce(-TAU/4, &vx, &vy, &av, 1.);hasBounced = 2;}
     if(hasBounced!=3 && py >1){ bounce(-TAU/2, &vx, &vy, &av, 1.); hasBounced = 3; }
     if(py <-1){
-        game_die(); return;
+        game_die(game_memory); return;
     }
     if(hasBounced!=4 && px<= paddleX+0.4 && px>=paddleX-0.4  && py<=paddleY+0.05 && py>=paddleY-0.05) {
         bounce(3/4*TAU-paddleRot, &vx, &vy, &av, 1.2);
@@ -151,7 +151,7 @@ void updateNrender(){
     puun_SWAP_BUFFERS();
 }
 
-void game_die() {
+void game_die(Data game_memory) {
     //free(buffer);
     printf("YOUR SCORE IS %d\n", score);
     platform_die();

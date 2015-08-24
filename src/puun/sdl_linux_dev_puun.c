@@ -7,6 +7,7 @@
 #include <dlfcn.h>
 
 static b32 running;
+static Data game_memory;
 
 void puun_SWAP_BUFFERS() {
     SDL_GL_SwapBuffers();
@@ -25,15 +26,16 @@ static float mousePositionY;
 static puun_KEY keyPressed;
 static puun_MouseClick isMouseClick;
 
-typedef void GameFunction();
+typedef void GameFunction(Data game_memory);
 static GameFunction* updateNrender;
 static GameFunction* init;
 static GameFunction* game_die;
+static Data library_handle;
 
 static b32 puun_load_game(char *path)
 {
     struct stat statbuf = {};
-    uint32_t stat_result = stat(path, &statbuf);
+    u32 stat_result = stat(path, &statbuf);
     if (stat_result != 0)
     {
         printf("Failed to stat game code at %s", path);
@@ -41,7 +43,7 @@ static b32 puun_load_game(char *path)
     }
 
     b32 is_valid = false;
-    Data library_handle = dlopen(path, RTLD_LAZY);
+    library_handle = dlopen(path, RTLD_LAZY);
     if (library_handle == 0)
     {
         char *error = dlerror();
@@ -80,11 +82,21 @@ static b32 puun_load_game(char *path)
     is_valid = library_handle && updateNrender && init && game_die;
     return is_valid;
 }
-
+static void puun_unload_game()
+{
+    if (library_handle)
+    {
+        dlclose(library_handle);
+        library_handle = 0;
+    }
+    updateNrender = 0;
+    init = 0;
+    game_die = 0;
+}
 void sdl_update() {
     SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
-        if(event.type == SDL_QUIT){ game_die(); return;}
+        if(event.type == SDL_QUIT){ game_die(game_memory); return;}
         else if(event.type == SDL_MOUSEMOTION) {
             //updateMouse(event.motion.x, event.motion.y);
             //TODO: Screen vs Virtual Space
@@ -161,7 +173,7 @@ void sdl_update() {
             }
         }
     }
-    updateNrender();
+    updateNrender(game_memory);
 }
 void getMousePosition(float* x, float* y) {
     *x = mousePositionX;
@@ -204,10 +216,23 @@ int main(int argc, char** args) {
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     glewInit();
     printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
-    puun_load_game(args[1]);
-    init();
+    if(!puun_load_game(args[1])) {
+        printf("error loading game code");
+        return 1;
+    }
+    game_memory = calloc(1, 1<<12);
+    init(game_memory);
     running = true;
-    while(running) sdl_update();
+    u32 lastTickLoad = 0;
+    while(running) {
+        sdl_update();
+        if(ticks-lastTickLoad > 500){
+            puun_unload_game();
+            puun_load_game(args[1]);
+            getTimeElapsed(&lastTickLoad);
+            lastTickLoad = ticks;
+        }
+    }
 
     return 0;
 }
