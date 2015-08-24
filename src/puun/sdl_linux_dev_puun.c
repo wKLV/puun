@@ -31,6 +31,7 @@ static GameFunction* updateNrender;
 static GameFunction* init;
 static GameFunction* game_die;
 static Data library_handle;
+static u32 library_mtime;
 
 static b32 puun_load_game(char *path)
 {
@@ -41,6 +42,7 @@ static b32 puun_load_game(char *path)
         printf("Failed to stat game code at %s", path);
         return false;
     }
+    library_mtime = statbuf.st_mtime;
 
     b32 is_valid = false;
     library_handle = dlopen(path, RTLD_LAZY);
@@ -94,7 +96,7 @@ static void puun_unload_game()
     game_die = 0;
 }
 void sdl_update() {
-    SDL_Event event = {0};
+    SDL_Event event = {};
     while(SDL_PollEvent(&event)!= 0){
         if(event.type == SDL_QUIT){ game_die(game_memory); return;}
         else if(event.type == SDL_MOUSEMOTION) {
@@ -223,14 +225,14 @@ int main(int argc, char** args) {
     game_memory = calloc(1, 1<<12);
     init(game_memory);
     running = true;
-    u32 lastTickLoad = 0;
     while(running) {
         sdl_update();
-        if(ticks-lastTickLoad > 500){
+        struct stat library_statbuf = {};
+        stat(args[1], &library_statbuf);
+        if (library_statbuf.st_mtime != library_mtime)
+        {
             puun_unload_game();
             puun_load_game(args[1]);
-            getTimeElapsed(&lastTickLoad);
-            lastTickLoad = ticks;
         }
     }
 

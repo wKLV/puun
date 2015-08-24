@@ -54,7 +54,6 @@ gf_textStyle initTextStyle(u8* font_pos,
         lastPos += 1;
 
     }
-    printf("lastPos:%d; lastLoc:%x\n", lastPos, lastPos*gf_TEXT_STRIDE);
 #else
     stbtt_BakeFontBitmap(buffer, 0, s.pixels,
             data->atlas, 1024, 1024, 32, 96,
@@ -79,8 +78,7 @@ gf_textStyle initTextStyle(u8* font_pos,
                  varying vec2 texcoord; \n\
                  void main() {\n\
                      float c = texture2D(texture, texcoord).r;\n\
-                       c=1.0-c;\n\
-                       gl_FragColor = vec4(c, c, c, 1.0-c);\n\
+                       gl_FragColor = vec4(0, 0, 0, c);\n\
                 //     gl_FragColor =  texture2D(texture, texcoord).rgba;\n\
                //      gl_FragColor = vec4(texcoord, 0., 1.0);\n\
                  //      gl_FragColor = vec4(0.5, 0.75, 0.25, 1.0);\n\

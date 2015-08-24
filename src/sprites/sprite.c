@@ -1,3 +1,6 @@
+// NOTE: THIS EXAMPLE IS NOT SUPPORTED UNITL THE TODO DOWN GETS DONE
+// TODO Merge this with firsty and secondy or expand until it's at least somewhat different
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -26,7 +29,6 @@ u8 program;
 static Data buffer;
 
 void init() {
-    running = true;
     buffer = malloc(4000);
     Data d = malloc(4*sizeof(Square));
     sheet = loadSpriteSheet(ASSETSPATH(/atlas.png));

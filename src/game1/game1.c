@@ -33,19 +33,26 @@ int v2p(float v){
     return pixels;
 }
 
-SpriteSheet* sheet;
-SpriteList sprites;
-Square* ball;
-gfText text;
-Data buffer;
+struct Game_Memory {
+    SpriteSheet* sheet;
+    SpriteList sprites;
+    Square* ball;
+    gfText text;
+    u8 buffer[1024];
+    Position lastPos;
+    b32 startMoving;
+    int points0, points1;
+    float velX, velY, finalX, finalY, inertia, angle;
+    Square square_data[4];
+};
 
-void init() {
-    running = true;
-    buffer = malloc(1024);
-    sheet = loadSpriteSheet(ASSETSPATH(atlas.png));
-    sprites = spritesFromSheet(*sheet, malloc(4*sizeof(Square)));
+void init(Data game_memory) {
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
 
-    Square* squares = sprites.squareList.squares;
+    mem->sheet = loadSpriteSheet(ASSETSPATH(atlas.png));
+    mem->sprites = spritesFromSheet(*mem->sheet, mem->square_data);
+
+    Square* squares = mem->sprites.squareList.squares;
     Position x = {};
     x.x = p2v(400);
     x.y = p2v(400);
@@ -80,8 +87,8 @@ void init() {
     ball_.u2 = 384.0/512;
     ball_.v2 = 128.0/256;
     squares[2] = ball_;
-    ball = &squares[2];
-    sprites.squareList.squares_length = 3;
+    mem->ball = &squares[2];
+    mem->sprites.squareList.squares_length = 3;
 
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -90,17 +97,19 @@ void init() {
 
     gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Medium.ttf), 15., 0);
     BBox bbox = {0, 0, 512, 512};
-    text.bbox = bbox;
-    text.text = malloc(20*sizeof(char));
-    strcpy((char*)text.text, "prueba");
-    text.style = style;
+    mem->text.bbox = bbox;
+    mem->text.text = malloc(20*sizeof(char));
+    strcpy((char*)mem->text.text, "prueba");
+    mem->text.style = style;
+
+    mem->inertia = 1.0f;
 }
 
-void die() {
-    running = false;
+void game_die() {
+    platform_die();
 }
 
-bool32 hasCollided(Square a, Square b) {
+b32 hasCollided(Square a, Square b) {
     float leftA = a.position.x - a.width*0.5;
     float rightA = a.position.x + a.width*0.5;
     float topA = a.position.y - a.height*0.5;
@@ -127,18 +136,15 @@ void bounce(float wallDegree, float* vx, float* vy, float incVel) {
 }
 
 
-Position lastPos;
-bool32 startMoving = false;
-int points0, points1;
-float velX, velY, finalX, finalY, inertia = 1, angle=0;
 
-void resetBall() {
-    finalX = 0; finalY = 0; velX = 0; velY =0;
-    square_traslateTo(ball, 0, 0);
+void resetBall(struct Game_Memory* mem) {
+    mem->finalX = 0; mem->finalY = 0; mem->velX = 0; mem->velY =0;
+    square_traslateTo(mem->ball, 0, 0);
 
 }
-void updateNrender() {
-    squareList_update_pos(sprites.squareList, buffer);
+void updateNrender(Data game_memory) {
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
+    squareList_update_pos(mem->sprites.squareList, mem->buffer);
     float x, y;
     puun_MouseClick mouse;
     puun_KEY key;
@@ -153,13 +159,13 @@ void updateNrender() {
     //PADDLES
     Square* paddle;
     if(key.isPressed){
-        bool32 isKeyAction = true;
+        b32 isKeyAction = true;
         switch(key.key) {
             case 'q': {
-                paddle = &sprites.squareList.squares[0];
+                paddle = &mem->sprites.squareList.squares[0];
             }; break;
             case 'w': {
-                paddle = &sprites.squareList.squares[1];
+                paddle = &mem->sprites.squareList.squares[1];
             }; break;
             default: isKeyAction = false;
         }
@@ -171,55 +177,55 @@ void updateNrender() {
         }
     }
     // BALL
-    lastPos = ball->position;
+    mem->lastPos = mem->ball->position;
     if(mouse & puun_CLICK) {
-        if(!startMoving) {
+        if(!mem->startMoving) {
         //    printf("%f %f %f\n", velX, velY, inertia);
-            velX =0; velY=0;
-            startMoving = true;
+            mem->velX =0; mem->velY=0;
+            mem->startMoving = true;
         }
-        float dx = p2v(x) - lastPos.x ;
-        float dy = p2v(y) - (-lastPos.y) ;
+        float dx = p2v(x) - mem->lastPos.x ;
+        float dy = p2v(y) - (-mem->lastPos.y) ;
 
-        if(!((dx>0) == (velX>0))||((dy>0) == (velY>0))) {
+        if(!((dx>0) == (mem->velX>0))||((dy>0) == (mem->velY>0))) {
            // printf("Inversion %f %f\n", velX, velY);
-            velX*= 0.75, velY *= 0.75;
+            mem->velX*= 0.75, mem->velY *= 0.75;
         }
-        velX*= 0.75, velY *= 0.75;
-        velX += dx; velY-= dy;
-        inertia = time*(1/16.f)*velX*velX+velY*velY;
+        mem->velX*= 0.75, mem->velY *= 0.75;
+        mem->velX += dx; mem->velY-= dy;
+        mem->inertia = time*(1/16.f)*mem->velX*mem->velX+mem->velY*mem->velY;
       //  if(inertia>0.05) finalX=velX, finalY=velY;
      //   else finalX =0, finalY=0;
-        if(inertia<10.)inertia=10.;
-        finalX=velX, finalY=velY;
-        square_traslateTo(ball, p2v(x), -p2v(y));
+        if(mem->inertia<10.)mem->inertia=10.;
+        mem->finalX=mem->velX, mem->finalY=mem->velY;
+        square_traslateTo(mem->ball, p2v(x), -p2v(y));
     }
     else {
-        startMoving = false;
-        square_traslate(ball, finalX/inertia, finalY/inertia);
+        mem->startMoving = false;
+        square_traslate(mem->ball, mem->finalX/mem->inertia, mem->finalY/mem->inertia);
     }
-    square_rotate(ball,0.01);
-    if(ball->position.x<-1) bounce(-TAU/4, &finalX, &finalY, 1);
-    if(ball->position.x>+1) bounce(+TAU/4, &finalX, &finalY, 1);
+    square_rotate(mem->ball,0.01);
+    if(mem->ball->position.x<-1) bounce(-TAU/4, &mem->finalX, &mem->finalY, 1);
+    if(mem->ball->position.x>+1) bounce(+TAU/4, &mem->finalX, &mem->finalY, 1);
     int i;
     int lastCollided = -1;
     for(i=0; i<2; i++) {
         if(i != lastCollided &&
-                hasCollided(*ball, sprites.squareList.squares[i])) {
+                hasCollided(*mem->ball, mem->sprites.squareList.squares[i])) {
             lastCollided = i;
-            bounce(sprites.squareList.squares[i].position.rotation,
-                    &finalX, &finalY, 1);
+            bounce(mem->sprites.squareList.squares[i].position.rotation,
+                    &mem->finalX, &mem->finalY, 1);
             break;
         }
     }
-    if(ball->position.y < -1) { points0++; resetBall(); }
-    if(ball->position.y > +1) { points1++; resetBall(); }
-    sprintf((char*)text.text, "%d / %d : %ums", points0, points1, ticks);
-    lastPos = ball->position;
+    if(mem->ball->position.y < -1) { mem->points0++; resetBall(mem); }
+    if(mem->ball->position.y > +1) { mem->points1++; resetBall(mem); }
+    sprintf((char*)mem->text.text, "%d / %d : %ums", mem->points0, mem->points1, ticks);
+    mem->lastPos = mem->ball->position;
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    renderSpriteList(sprites);
-    gfTextRender(text);
+    renderSpriteList(mem->sprites);
+    gfTextRender(mem->text);
     puun_SWAP_BUFFERS();
 }

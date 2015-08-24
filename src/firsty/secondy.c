@@ -15,40 +15,56 @@
 
 #define TAU 6.2832
 
-Square* paddle;
-Square* ball;
-SquareList Squares;
-u8 program;
 
-static GLuint ImageId;
-static u8* Image;
+struct Game_Memory {
+    u32 ImageId;
 
-static Data buffer;
+    int score;
+    float paddleX;
+    float paddleY;
+    float paddleRot;
+    float rotate;
+    float vx, vy, px, py, av;
+    b32 hasBounced;
+
+    Square* paddle;
+    Square* ball;
+    SquareList Squares;
+    u8 program;
+    u8 buffer[4000];
+};
+
 
 void init(Data game_memory) {
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
+
+    mem->paddleX=0;
+    mem->paddleY=-0.8;
+    mem->paddleRot=0;
+    mem->paddleX=0;
+    mem->vy=1;
     u32 ms;
     getTimeElapsed(&ms);
-    buffer = malloc(4000);
-        u8 vertexSource[] = "attribute vec3 position;\n\
-                               attribute vec2 uv;\n\
-                               attribute vec2 scale;\n\
-                               varying vec2 texcoord;\n\
-                               void main() {\n\
-                                   gl_Position = vec4(position, 1.0);\n\
-                                   texcoord = uv;\n\
-                               }";
-        u8 fragmentSource[] = "precision mediump float; \n\
-                                 uniform sampler2D texture; \n\
-                                varying vec2 texcoord; \n\
-                               void main() {\n\
-                               gl_FragColor = texture2D(texture, texcoord);\n\
-                               }\n\
-                              ";
-    program = setupProgram(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
-    Squares = create_square_list(program, malloc(3*sizeof(Square)));
+    u8 vertexSource[] = "attribute vec3 position;\n\
+                           attribute vec2 uv;\n\
+                           attribute vec2 scale;\n\
+                           varying vec2 texcoord;\n\
+                           void main() {\n\
+                               gl_Position = vec4(position, 1.0);\n\
+                               texcoord = uv;\n\
+                           }";
+    u8 fragmentSource[] = "precision mediump float; \n\
+                             uniform sampler2D texture; \n\
+                            varying vec2 texcoord; \n\
+                           void main() {\n\
+                           gl_FragColor = texture2D(texture, texcoord);\n\
+                           }\n\
+                          ";
+    mem->program = setupProgram(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
+    mem->Squares = create_square_list(mem->program, malloc(3*sizeof(Square)));
     int x, y, n;
-    Image = stbi_load(ASSETSPATH(atlas.png), &x, &y, &n, 0);
-    ImageId = setupTexture(Image, x, y);
+    u8* Image = stbi_load(ASSETSPATH(atlas.png), &x, &y, &n, 0);
+    mem->ImageId = setupTexture(Image, x, y);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -59,16 +75,16 @@ void init(Data game_memory) {
     s.u1 = 0./512; s.u2= 256./512;
     s.v1 = 0./256; s.v2 = 49./256;
     s.position.z = +0.8;
-    Squares.squares[0] = s;
+    mem->Squares.squares[0] = s;
     s.width = 0.2; s.height = 0.2;
     s.u1 = 256./512; s.u2= 384./512;
     s.v1 = 0./256; s.v2 = 128./256;
     s.position.z = 0;
-    Squares.squares[1] = s;
-    Squares.squares_length = 2;
+    mem->Squares.squares[1] = s;
+    mem->Squares.squares_length = 2;
 
-    paddle = &Squares.squares[0];
-    ball = &Squares.squares[1];
+    mem->paddle = &mem->Squares.squares[0];
+    mem->ball = &mem->Squares.squares[1];
 
 }
 
@@ -90,45 +106,40 @@ void bounce(float wallDegree, float* vx, float* vy, float* av, float incVel) {
     *vx = vvx*incVel, *vy = vvy*incVel;
 }
 
-static int score = 0;
-static float paddleX =0, paddleY=-.8, paddleRot;
-
-static float rotate = 0;
-static float vx = 0, vy = -1, px = 0, py = 0, av =0;
-static char hasBounced = 0;
 void updateNrender(Data game_memory){
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
     float time;
     {
         float x, y;
         u32 ms;
         getMousePosition(&x, &y);
-        paddleX = s2p(x);
-        paddleRot = s2p(y);
+        mem->paddleX = s2p(x);
+        mem->paddleRot = s2p(y);
         getTimeElapsed(&ms);
         time = ms /1000.f;
     }
 
-    rotate += av*time*1;
-    px += 1*time*vx, py += 1*time*vy;
-    square_rotateTo(ball, rotate);
-    square_traslateTo(ball, px, py);
+    mem->rotate += mem->av*time*1;
+    mem->px += 1*time*mem->vx, mem->py += 1*time*mem->vy;
+    square_rotateTo(mem->ball, mem->rotate);
+    square_traslateTo(mem->ball, mem->px, mem->py);
 
-    square_traslateTo(paddle, paddleX, paddleY);
-    square_rotateTo(paddle, paddleRot);
+    square_traslateTo(mem->paddle, mem->paddleX, mem->paddleY);
+    square_rotateTo(mem->paddle, mem->paddleRot);
 
-    squareList_update_pos(Squares, buffer);
+    squareList_update_pos(mem->Squares, mem->buffer);
 
     //CHECK COLLISION :)
-    if(hasBounced!= 1 && px <-1){ bounce(TAU/4, &vx, &vy, &av, 1.);hasBounced = 1; }
-    if(hasBounced!=2 && px> 1){ bounce(-TAU/4, &vx, &vy, &av, 1.);hasBounced = 2;}
-    if(hasBounced!=3 && py >1){ bounce(-TAU/2, &vx, &vy, &av, 1.); hasBounced = 3; }
-    if(py <-1){
+    if(mem->hasBounced!= 1 && mem->px <-1){ bounce(TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);mem->hasBounced = 1; }
+    if(mem->hasBounced!=2 && mem->px> 1){ bounce(-TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);mem->hasBounced = 2;}
+    if(mem->hasBounced!=3 && mem->py >1){ bounce(-TAU/2, &mem->vx, &mem->vy, &mem->av, 1.); mem->hasBounced = 3; }
+    if(mem->py <-1){
         game_die(game_memory); return;
     }
-    if(hasBounced!=4 && px<= paddleX+0.4 && px>=paddleX-0.4  && py<=paddleY+0.05 && py>=paddleY-0.05) {
-        bounce(3/4*TAU-paddleRot, &vx, &vy, &av, 1.2);
-        hasBounced = 4;
-        score++;
+    if(mem->hasBounced!=4 && mem->px<= mem->paddleX+0.4 && mem->px>=mem->paddleX-0.4  && mem->py<=mem->paddleY+0.05 && mem->py>=mem->paddleY-0.05) {
+        bounce(3/4*TAU-mem->paddleRot, &mem->vx, &mem->vy, &mem->av, 1.2);
+        mem->hasBounced = 4;
+        mem->score++;
     }
 
 
@@ -140,10 +151,10 @@ void updateNrender(Data game_memory){
     uniImg.name = (u8*)"texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;
-    uniImg.id = ImageId;
+    uniImg.id = mem->ImageId;
 
 
-    render_squareList(Squares, (Data)&uniImg, 1);
+    render_squareList(mem->Squares, (Data)&uniImg, 1);
     //uniImg.id = ballId;
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
@@ -152,7 +163,8 @@ void updateNrender(Data game_memory){
 }
 
 void game_die(Data game_memory) {
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
     //free(buffer);
-    printf("YOUR SCORE IS %d\n", score);
+    printf("YOUR SCORE IS %d\n", mem->score);
     platform_die();
 }

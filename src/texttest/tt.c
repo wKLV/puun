@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <GL/glew.h>
+#include <math.h>
 
 //#define STB_IMAGE_WRITE_IMPLEMENTATION
 //#include "../other/stb_image_write.h"
@@ -19,11 +20,9 @@
 
 //char buffer[24<<20];
 
-static gfText text;
-void init(){
+void init(Data game_memory){
 //    u8* Image = malloc(1<<18);
 //    s32 ImageWidth; s32 ImageHeight;
-    running = true;
     // not_main();
 #if 0
     char vertexSource[] = "attribute vec3 position;\n\
@@ -44,7 +43,8 @@ void init(){
                              }\n\
     ";
 #endif
-    gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Light.ttf), 24., 0);
+    gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Medium.ttf), 24., 0);
+    gfText text;
     BBox bbox = {0};
     bbox.x = -256;
     bbox.y = 0;
@@ -52,7 +52,7 @@ void init(){
     bbox.h = 0;
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
-    text.text = (u8*)"HELLO WORLD         From the oTHER Side";
+    text.text = (u8*)"HELLO WORLD         From the oTHER Side                  ";
     text.style = style;
 
 
@@ -60,8 +60,11 @@ void init(){
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     gfTextRender(text);
+    *(gfText*)game_memory = text;
 #if 0
     stbtt_fontinfo font;
     u8* buffer = malloc(1000000);
@@ -98,7 +101,8 @@ void init(){
 #endif
 }
 
-void updateNrender(){
+void updateNrender(Data game_memory){
+    gfText text = *(gfText*)game_memory;
    // glClearColor(1.0, 1.0, 1.0, 1.0);
    // glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -114,14 +118,22 @@ void updateNrender(){
     //uniImg.id = ballId;
     //uniImg.texnum = 0;
     //render_squareList(Squares, (Data)&uniImg, 1);
-
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glEnable(GL_DEPTH_TEST);
+    u32 ms;
+    static float totalTime;
+    getTimeElapsed(&ms);
+    float time = ms/1000.f;
+    totalTime += time;
+    char contentText[256];
+    sprintf(contentText, "HELLO WORLD   %u     From the oTHER Side", ms);
+    text.text= (u8*)contentText;
+    text.bbox.x = 512*sinf(totalTime)-256;
+    text.bbox.y = 70*cosf(totalTime*0.3);
+    glClearColor(0.5, 0.75, 0.25, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     gfTextRender(text);
     puun_SWAP_BUFFERS();
 }
 
-void die(){
-    running = false;
+void game_die(Data game_memory){
+    platform_die();
 }

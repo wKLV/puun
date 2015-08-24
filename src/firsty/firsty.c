@@ -47,6 +47,8 @@ struct Game_Memory {
     float px;
     float py;
     float av;
+    u32 score;
+    b32 hasBounced;
 };
 
 void init(Data game_memory) {
@@ -105,9 +107,7 @@ void bounce(float wallDegree, float* vx, float* vy, float* av, float incVel) {
     float vvy = vel*s;
     *vx = vvx*incVel, *vy = vvy*incVel;
 }
-
-static int score = 0;
-static float  paddleX =0, paddleY=-.8, paddleRot;
+    float paddleX =0, paddleY=-.8, paddleRot;
 
 void updateMouse(int x, int y) {
     paddleX = s2p(x);
@@ -119,7 +119,7 @@ void updateNrender(Data game_memory){
 
     puun_KEY key;
     getKeyboardKey(&key);
-    float x, y;
+    float x = 400, y = 400;
     float time;
     u32 ms;
     getMousePosition(&x, &y);
@@ -129,9 +129,8 @@ void updateNrender(Data game_memory){
     paddleRot = s2p(y);
     if(key.isPressed && key.key == 'p')
         playSound(1);
-    char hasBounced = 0;
 
-    mem->rotate += mem->v*1*time;
+    mem->rotate += mem->av*1*time;
     mem->px += 1*mem->vx*time, mem->py += 1*mem->vy*time;
     rotateMatrix(mem->rotate, mem->ballMatrix);
     scaleMatrix(0.08, mem->ballMatrix);
@@ -142,16 +141,16 @@ void updateNrender(Data game_memory){
     scaleMatrix(0.2, mem->paddleMatrix);
 
     //CHECK COLLISION :)
-    if(hasBounced!= 1 && mem->px <-1){ bounce(TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);hasBounced = 1; }
-    if(hasBounced!=2 && mem->px> 1){ bounce(-TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);hasBounced = 2;}
-    if(hasBounced!=3 && mem->py >1){ bounce(-TAU/2, &mem->vx, &mem->vy, &mem->av, 1.); hasBounced = 3; }
+    if(mem->hasBounced!= 1 && mem->px <-1){ bounce(TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);mem->hasBounced = 1; }
+    if(mem->hasBounced!=2 && mem->px> 1){ bounce(-TAU/4, &mem->vx, &mem->vy, &mem->av, 1.);mem->hasBounced = 2;}
+    if(mem->hasBounced!=3 && mem->py >1){ bounce(-TAU/2, &mem->vx, &mem->vy, &mem->av, 1.); mem->hasBounced = 3; }
     if(mem->py <-1){
         game_die(game_memory); return;
     }
-    if(hasBounced!=4 && mem->px<= paddleX+0.3 && mem->px>=paddleX-0.2  && mem->py<=paddleY+0.3 && mem->py>=paddleY-0.2) {
+    if(mem->hasBounced!=4) if(mem->px<= paddleX+0.3 && mem->px>=paddleX-0.2  && mem->py<=paddleY+0.3 && mem->py>=paddleY-0.2) {
         bounce(3/4*TAU-paddleRot, &mem->vx, &mem->vy, &mem->av, 1.2);
-        hasBounced = 4;
-        score++;
+        mem->hasBounced = 4;
+        mem->score++;
     }
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -190,6 +189,7 @@ void updateNrender(Data game_memory){
 }
 
 void game_die(Data game_memory) {
-    printf("YOUR SCORE IS %d\n", score);
+    struct Game_Memory* mem = (struct Game_Memory*) game_memory;
+    printf("YOUR SCORE IS %d\n", mem->score);
     platform_die();
 }
