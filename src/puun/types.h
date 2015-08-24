@@ -16,7 +16,10 @@ typedef int16_t s16;
 typedef int32_t s32;
 typedef int64_t s64;
 
-typedef int32_t bool32;
+typedef int8_t b8;
+typedef int16_t b16;
+typedef int32_t b32;
+typedef int64_t b64;
 
 typedef float f32;
 typedef double f64;

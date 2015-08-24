@@ -53,7 +53,8 @@ void rotateMatrix(float a, float* matrix) {
 }
 
 void init() {
-    running = true;
+    u32 ms;
+    getTimeElapsed(&ms);
     square_init();
         u8 vertexSource[] = "precision mediump float; attribute vec2 position;\n\
                                uniform mat3 world;\n\
@@ -145,7 +146,7 @@ void updateNrender(){
     if(hasBounced!=2 && px> 1){ bounce(-TAU/4, &vx, &vy, &av, 1.);hasBounced = 2;}
     if(hasBounced!=3 && py >1){ bounce(-TAU/2, &vx, &vy, &av, 1.); hasBounced = 3; }
     if(py <-1){
-        die();
+        game_die(); return;
     }
     if(hasBounced!=4 && px<= paddleX+0.3 && px>=paddleX-0.2  && py<=paddleY+0.3 && py>=paddleY-0.2) {
         bounce(3/4*TAU-paddleRot, &vx, &vy, &av, 1.2);
@@ -188,8 +189,7 @@ void updateNrender(){
     puun_SWAP_BUFFERS();
 }
 
-void die() {
-    running = false;
+void game_die() {
     printf("YOUR SCORE IS %d\n", score);
- //   sdl_die();
+    platform_die();
 }

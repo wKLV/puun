@@ -2,43 +2,89 @@
 #include <SDL/SDL_mixer.h>
 #include <GL/glew.h>
 #include <stdio.h>
-#ifdef JS
-#include <emscripten.h>
-#endif
 #include "types.h"
+#include <sys/stat.h> // stat, fstat
+#include <dlfcn.h>
+
+static b32 running;
 
 void puun_SWAP_BUFFERS() {
     SDL_GL_SwapBuffers();
 }
-static b32 running;
-#include "puun.h"
+
 #include "input/keyboard.h"
 #include "input/mouse.h"
 void platform_die() {
     running = false;
-#ifdef JS
-    emscripten_cancel_main_loop();
-#endif
     SDL_Quit();
 };
-#if 0 //This was a horrible idea //TODO: Logger
-#ifdef WDS
-#define printf(format, value) \
-    {FILE* wdsoutputfile = fopen("log.txt", "a");\
-    fprintf(wdsoutputfile, (format), (value));\
-    fclose(wdsoutputfile);}
-#endif
-#endif
 
 static float mousePositionX;
 static float mousePositionY;
 
 static puun_KEY keyPressed;
 static puun_MouseClick isMouseClick;
+
+typedef void GameFunction();
+static GameFunction* updateNrender;
+static GameFunction* init;
+static GameFunction* game_die;
+
+static b32 puun_load_game(char *path)
+{
+    struct stat statbuf = {};
+    uint32_t stat_result = stat(path, &statbuf);
+    if (stat_result != 0)
+    {
+        printf("Failed to stat game code at %s", path);
+        return false;
+    }
+
+    b32 is_valid = false;
+    Data library_handle = dlopen(path, RTLD_LAZY);
+    if (library_handle == 0)
+    {
+        char *error = dlerror();
+        printf("Unable to load library at path %s: %s\n", path, error);
+        return false;
+    }
+    updateNrender =
+        (GameFunction*)dlsym(library_handle, "updateNrender");
+    if (updateNrender == 0)
+    {
+        char *error = dlerror();
+        printf("Unable to load symbol updateNRender: %s\n", error);
+        free(error);
+        return false;
+    }
+
+    game_die =
+        (GameFunction*)dlsym(library_handle, "game_die");
+    if (updateNrender == 0)
+    {
+        char *error = dlerror();
+        printf("Unable to load symbol game_die: %s\n", error);
+        free(error);
+        return false;
+    }
+
+    init =
+        (GameFunction*)dlsym(library_handle, "init");
+    if (updateNrender == 0)
+    {
+        char *error = dlerror();
+        printf("Unable to load symbol init: %s\n", error);
+        free(error);
+        return false;
+    }
+    is_valid = library_handle && updateNrender && init && game_die;
+    return is_valid;
+}
+
 void sdl_update() {
     SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
-        if(event.type == SDL_QUIT){ game_die(); return; }
+        if(event.type == SDL_QUIT){ game_die(); return;}
         else if(event.type == SDL_MOUSEMOTION) {
             //updateMouse(event.motion.x, event.motion.y);
             //TODO: Screen vs Virtual Space
@@ -140,6 +186,7 @@ int music_length;
 Mix_Chunk* chunks[1024];
 int chunks_length;
 
+#include "sound/sound.h"
 puun_SoundId loadSoundFile(char* path) {
     chunks[chunks_length] = Mix_LoadWAV(path);
     return chunks_length++;
@@ -148,11 +195,8 @@ void playSound(puun_SoundId id) {
     Mix_PlayChannel( -1, chunks[id], 0);
 }
 
-#ifdef WDS
-int WinMain() {
-#else
-int main() {
-#endif
+
+int main(int argc, char** args) {
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_WM_SetCaption("Puun", NULL);
     if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1) printf("error initialializ sound\n");
@@ -160,13 +204,10 @@ int main() {
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     glewInit();
     printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
+    puun_load_game(args[1]);
     init();
     running = true;
-    #ifdef JS
-        emscripten_set_main_loop(sdl_update, 0, 0);
-    #else
-        while(running) sdl_update();
-    #endif
+    while(running) sdl_update();
 
     return 0;
 }

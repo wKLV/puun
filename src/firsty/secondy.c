@@ -26,7 +26,8 @@ static u8* Image;
 static Data buffer;
 
 void init() {
-    running = true;
+    u32 ms;
+    getTimeElapsed(&ms);
     buffer = malloc(4000);
         u8 vertexSource[] = "attribute vec3 position;\n\
                                attribute vec2 uv;\n\
@@ -122,7 +123,7 @@ void updateNrender(){
     if(hasBounced!=2 && px> 1){ bounce(-TAU/4, &vx, &vy, &av, 1.);hasBounced = 2;}
     if(hasBounced!=3 && py >1){ bounce(-TAU/2, &vx, &vy, &av, 1.); hasBounced = 3; }
     if(py <-1){
-        die();
+        game_die(); return;
     }
     if(hasBounced!=4 && px<= paddleX+0.4 && px>=paddleX-0.4  && py<=paddleY+0.05 && py>=paddleY-0.05) {
         bounce(3/4*TAU-paddleRot, &vx, &vy, &av, 1.2);
@@ -150,9 +151,8 @@ void updateNrender(){
     puun_SWAP_BUFFERS();
 }
 
-void die() {
+void game_die() {
     //free(buffer);
-    running = false;
     printf("YOUR SCORE IS %d\n", score);
- //   sdl_die();
+    platform_die();
 }
