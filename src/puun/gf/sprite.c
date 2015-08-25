@@ -1,5 +1,5 @@
 #include "sprite.h"
-//#include <assert.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gl_help.h"
@@ -18,8 +18,6 @@ s32 spritesheets_length = 0;
 GLuint Program;
 GLuint Buffer;
 
-void initSpriteProgram(){
-}
 SpriteSheet* loadSpriteSheet(String loc) {
     GLuint ImageId;
     u8* Image;
@@ -29,14 +27,14 @@ SpriteSheet* loadSpriteSheet(String loc) {
 
     struct SpriteSheetData data = {};
     data.ImageId = ImageId;
-    s32 id = spritesheets_length;
+    assert(spritesheets_length<512);
+    s32 id = spritesheets_length++;
     SpriteSheet sheet = {};
     sheet.id = id;
     data.spritesheet = sheet;
 
     spritesheets[id] = data;
-    id++;
-    return &spritesheets[id-1].spritesheet;
+    return &spritesheets[id].spritesheet;
 }
 
 SpriteList spritesFromSheet(SpriteSheet s, Data squares){
