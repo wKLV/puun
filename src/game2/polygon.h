@@ -3,7 +3,22 @@
 #include "../puun/types.h"
 #include "vector.h"
 
-typedef ARRAY_DEFINE(v2) Polygon;
+#if 0 //TODO Perhaps we want this sometime?
+#if puun_2D
+typedef v2 Vertex;
+#else
+typedef v3 Vertex;
+#endif
+#endif
+typedef v2 Vertex;
+
+typedef ARRAY_DEFINE(Vertex) Polygon;
+
+typedef Vertex Edge[2];
+
+typedef Vertex Triangle[3];
+
+
 
 b32 intersect_polygon(Polygon a, Polygon b);
 

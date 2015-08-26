@@ -11,6 +11,7 @@
 #include "../puun/gf/text.h"
 #include "../puun/gf/gl_help.h"
 
+#define puun_2D 1
 #include "polygon.c"
 
 
@@ -29,9 +30,9 @@ struct Game_Memory {
     u32 program;
     u32 vertexBuffer;
     u32 elementBuffer;
-      Polygon ps[10];
+      Polygon ps[6];
       PolygonList pl;
-      v2 polygonData[13][10];
+      v2 polygonData[6][16];
       u8 Buffer[2000];
       u8 Buffer2[2000];
 };
@@ -40,7 +41,7 @@ const u32 hexagonDrawOrder[] = {0, 1, 2,
                                 0, 2, 3,
                                 0, 3, 4,
                                 0, 4, 5};
-
+void init_geometry();
 void init(Data game_memory) {
     struct Game_Memory* mem = (struct Game_Memory*)game_memory;
 
@@ -57,6 +58,12 @@ void init(Data game_memory) {
     mem->program = setupProgram(vs, 0, fs, 0);
 
     mem->pl = create_polygonList(mem->program, mem->ps);
+    glGenBuffers(1, &mem->vertexBuffer);
+    glGenBuffers(1, &mem->elementBuffer);
+    init_geometry(game_memory);
+}
+void init_geometry(Data game_memory) {
+    struct Game_Memory* mem = (struct Game_Memory*)game_memory;
     int i;
 #if 1
     for(i=0;i<6;i++) {
@@ -71,14 +78,14 @@ void init(Data game_memory) {
     for(i=0, j=0; i<6; i++) {
         Polygon* p = &mem->ps[i];
         p->value = mem->polygonData[i];
-        p->num = i+3;
+        p->num = i*2+4;
         v2 base = {};
-        base.x = 0.8*cos(i*TAU/6.f);
-        base.y = 0.8*sin(i*TAU/6.f);
+        base.x = 0.7*cos(i*TAU/6.f);
+        base.y = 0.7*sin(i*TAU/6.f);
         for(j=0; j<p->num; j++) {
             v2 a = {};
-            a.x = 0.2*cos(j*TAU/p->num);
-            a.y = 0.2*sin(j*TAU/p->num);
+            a.x = ((i+j)%p->num+1)/(p->num*0.5)*0.2*cos(j*TAU/p->num);
+            a.y = ((i+j)%p->num+1)/(p->num*0.5)*0.2*sin(j*TAU/p->num);
             a = add_v2(a, base);
             p->value[j] = a;
         }
@@ -89,8 +96,6 @@ void init(Data game_memory) {
 #if 1
     glUseProgram(mem->program);
     GLint pos = glGetAttribLocation(mem->program, "position");
-    glGenBuffers(1, &mem->vertexBuffer);
-    glGenBuffers(1, &mem->elementBuffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, mem->vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(mem->hexagon), mem->hexagon, GL_STATIC_DRAW);
@@ -117,7 +122,7 @@ void updateNrender(Data game_memory) {
         }
         bool isF5 = (character.key == 30);
         if(isF5) {
-            init(game_memory);
+            init_geometry(game_memory);
             return;
         }
     }
@@ -141,7 +146,7 @@ void updateNrender(Data game_memory) {
 
     glUseProgram(mem->program);
 
-    glUniform4f(glGetUniformLocation(mem->program, "colour"), 0.5, 0.75, 0.25, 1.0);
+    glUniform4f(glGetUniformLocation(mem->program, "colour"), 0.5, 0.25, 0.75, 1.0);
 
     GLint pos = glGetAttribLocation(mem->program, "position");
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mem->elementBuffer);
@@ -151,7 +156,7 @@ void updateNrender(Data game_memory) {
     glDrawElements(GL_TRIANGLES, ARRCOUNT(hexagonDrawOrder), GL_UNSIGNED_INT, (void*)0);
 
 
-    glUniform4f(glGetUniformLocation(mem->program, "colour"), 0.75, 0.25, 0.5, 1.0);
+    glUniform4f(glGetUniformLocation(mem->program, "colour"), 0.25, 0.5, 0.75, 1.0);
     render_polygonList(mem->pl, 0, 0);
     puun_SWAP_BUFFERS();
 }
