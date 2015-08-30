@@ -8,9 +8,9 @@
         * [ ] Create atlas
         * [ ] Load atlas from description text
         * [ ] Access atlas to get sprite
-    * [ ] Text rendering
+    * [o] Text rendering
         * A letter renderd FYEAH!
-        * [.] A lib (gf/text?) to render text ala render_squares
+        * [O] A lib (gf/text?) to render text ala render_squares
     * [o] Sound
         * [ ] Music support somehow?
         * Work f*ker
@@ -50,8 +50,8 @@
         * [X] sdl_swapbuffers
         * [X] platform callbacks...
 ==ideas==
-    * [ ] Crazy handmade like development tricks
-        * [ ] hot loading for linux
+    * [O] Crazy handmade like development tricks
+        * [X] hot loading for linux
         * [ ] Arena allocation
     * [ ] Screen vs Virtual coordinate system
     * [ ] Description text for initialization

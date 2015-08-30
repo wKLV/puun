@@ -24,6 +24,12 @@ typedef int64_t b64;
 typedef float f32;
 typedef double f64;
 
+// MATH STUFF
+#define TAU 6.28318530717958647692
+#define min(x,y) (((x)<(y))?(x):(y))
+#define max(x,y) (((x)>(y))?(x):(y))
+#define clamp(x, min, max) (((x)>(max))?(max):(((x)<(min))?(min):(x)))
+
 
 // ARRAY HELPER
 
@@ -33,7 +39,17 @@ typedef double f64;
 #define PARAM_ARR(name, x) x* name, s32 name ## _length
 #define DEF_ARR(name, x) x* name; s32 name ## _length;
 
+#define ARRCOUNT(x) (sizeof((x))/sizeof((x)[0]))
+
 typedef ARRAY_DEFINE(Data) DataArray;
+
+//COMMON DATA STRUCTURES
+#define DOUBLE_LINKED_LIST(type)\
+struct type##_Linked_List{\
+    struct type##_Linked_List* next;\
+    struct type##_Linked_List* previous;\
+    type value;\
+}
 
 // gx types
 typedef struct {

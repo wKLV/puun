@@ -1,4 +1,5 @@
 *.vim
+*.swp
 *.obj
 *.o
 *.dll

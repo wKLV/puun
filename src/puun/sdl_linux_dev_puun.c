@@ -6,30 +6,10 @@
 #include <sys/stat.h> // stat, fstat
 #include <dlfcn.h>
 
-static b32 running;
-static Data game_memory;
-
-void puun_SWAP_BUFFERS() {
-    SDL_GL_SwapBuffers();
-}
-
-#include "input/keyboard.h"
-#include "input/mouse.h"
-void platform_die() {
-    running = false;
-    SDL_Quit();
-};
-
-static float mousePositionX;
-static float mousePositionY;
-
-static puun_KEY keyPressed;
-static puun_MouseClick isMouseClick;
-
 typedef void GameFunction(Data game_memory);
-static GameFunction* updateNrender;
-static GameFunction* init;
-static GameFunction* game_die;
+static GameFunction* myUpdateNrender;
+static GameFunction* myInit;
+static GameFunction* myGame_die;
 static Data library_handle;
 static u32 library_mtime;
 
@@ -52,9 +32,9 @@ static b32 puun_load_game(char *path)
         printf("Unable to load library at path %s: %s\n", path, error);
         return false;
     }
-    updateNrender =
+    myUpdateNrender =
         (GameFunction*)dlsym(library_handle, "updateNrender");
-    if (updateNrender == 0)
+    if (myUpdateNrender == 0)
     {
         char *error = dlerror();
         printf("Unable to load symbol updateNRender: %s\n", error);
@@ -62,9 +42,9 @@ static b32 puun_load_game(char *path)
         return false;
     }
 
-    game_die =
+    myGame_die =
         (GameFunction*)dlsym(library_handle, "game_die");
-    if (updateNrender == 0)
+    if (myGame_die == 0)
     {
         char *error = dlerror();
         printf("Unable to load symbol game_die: %s\n", error);
@@ -72,16 +52,16 @@ static b32 puun_load_game(char *path)
         return false;
     }
 
-    init =
+    myInit =
         (GameFunction*)dlsym(library_handle, "init");
-    if (updateNrender == 0)
+    if (myInit == 0)
     {
         char *error = dlerror();
         printf("Unable to load symbol init: %s\n", error);
         free(error);
         return false;
     }
-    is_valid = library_handle && updateNrender && init && game_die;
+    is_valid = library_handle && myUpdateNrender && myInit && myGame_die;
     return is_valid;
 }
 static void puun_unload_game()
@@ -91,14 +71,15 @@ static void puun_unload_game()
         dlclose(library_handle);
         library_handle = 0;
     }
-    updateNrender = 0;
-    init = 0;
-    game_die = 0;
+    myUpdateNrender = 0;
+    myInit = 0;
+    myGame_die = 0;
 }
+#include "sdl_common.c"
 void sdl_update() {
-    SDL_Event event = {};
+    SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
-        if(event.type == SDL_QUIT){ game_die(game_memory); return;}
+        if(event.type == SDL_QUIT){ myGame_die(game_memory); return; }
         else if(event.type == SDL_MOUSEMOTION) {
             //updateMouse(event.motion.x, event.motion.y);
             //TODO: Screen vs Virtual Space
@@ -175,40 +156,8 @@ void sdl_update() {
             }
         }
     }
-    updateNrender(game_memory);
+    myUpdateNrender(game_memory);
 }
-void getMousePosition(float* x, float* y) {
-    *x = mousePositionX;
-    *y= mousePositionY;
-}
-void getKeyboardKey(puun_KEY* character) {
-    *character = keyPressed;
-}
-void getMouseClick(puun_MouseClick* click) {
-    *click = isMouseClick;
-}
-
-u32 ticks;
-void getTimeElapsed(u32* time) {
-    u32 nextTicks = SDL_GetTicks();
-    *time = nextTicks - ticks;
-    ticks = nextTicks;
-}
-
-Mix_Music* music[512];
-int music_length;
-Mix_Chunk* chunks[1024];
-int chunks_length;
-
-#include "sound/sound.h"
-puun_SoundId loadSoundFile(char* path) {
-    chunks[chunks_length] = Mix_LoadWAV(path);
-    return chunks_length++;
-}
-void playSound(puun_SoundId id) {
-    Mix_PlayChannel( -1, chunks[id], 0);
-}
-
 
 int main(int argc, char** args) {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -222,8 +171,8 @@ int main(int argc, char** args) {
         printf("error loading game code");
         return 1;
     }
-    game_memory = calloc(1, 1<<12);
-    init(game_memory);
+    game_memory = calloc(1, 1<<14);
+    myInit(game_memory);
     running = true;
     while(running) {
         sdl_update();
