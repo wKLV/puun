@@ -6,12 +6,12 @@
 //#define STB_IMAGE_WRITE_IMPLEMENTATION
 //#include "../other/stb_image_write.h"
 
-#include "../other/stb_truetype.h"
+#include <other/stb_truetype.h>
 
-#include "../puun/puun.h"
-#include "../puun/gf/gl_help.h"
-#include "../puun/gf/square.h"
-#include "../puun/gf/text.h"
+#include <puun/puun.h>
+#include <puun/gf/gl_help.h>
+#include <puun/gf/square.h>
+#include <puun/gf/text.h>
 
 
 #ifndef ASSETSPATH
@@ -54,7 +54,6 @@ void init(Data game_memory){
     text.bbox = bbox;
     text.text = (u8*)"HELLO WORLD         From the oTHER Side                  ";
     text.style = style;
-
 
     printf("fit: %d\n", gfTextFit(text));
 

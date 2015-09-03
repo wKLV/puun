@@ -6,11 +6,11 @@
 #include <GL/glew.h>
 #include <SDL/SDL.h>
 
-#include "../puun/puun.h"
-#include "../puun/types.h"
-#include "../puun/gf/sprite.h"
-#include "../puun/gf/text.h"
-#include "../puun/gf/gl_help.h"
+#include <puun/puun.h>
+#include <puun/types.h>
+#include <puun/gf/sprite.h>
+#include <puun/gf/text.h>
+#include <puun/gf/gl_help.h>
 
 #define puun_2D 1
 #include "polygon.c"

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "../puun/gf/gl_help.h"
+#include <puun/gf/gl_help.h>
 
 #include "polygon.h"
 

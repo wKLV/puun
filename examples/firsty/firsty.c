@@ -2,12 +2,10 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "../puun/puun.h"
-#include "../puun/types.h"
-#include "../puun/gf/square.c"
-#include "../other/stb_image.h"
-
-#define TAU 6.2832
+#include <puun/puun.h>
+#include <puun/types.h>
+#include <puun/gf/square.c>
+#include <other/stb_image.h>
 
 #ifndef ASSETSPATH
 #define ASSETSPATH(name) "../assets/" # name

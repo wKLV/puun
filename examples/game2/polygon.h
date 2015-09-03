@@ -1,6 +1,6 @@
 #ifndef puun_polygonh
 #define puun_polygonh
-#include "../puun/types.h"
+#include <puun/types.h>
 #include "vector.h"
 
 #if 0 //TODO Perhaps we want this sometime?

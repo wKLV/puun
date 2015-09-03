@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "../puun/puun.h"
-#include "../puun/types.h"
-#include "../puun/gf/sprite.h"
-#include "../puun/gf/text.h"
+#include <puun/puun.h>
+#include <puun/types.h>
+#include <puun/gf/sprite.h>
+#include <puun/gf/text.h>
 
 #ifndef ASSETSPATH
 #define ASSETSPATH(name) "../assets/" # name

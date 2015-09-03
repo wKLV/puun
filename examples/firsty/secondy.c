@@ -4,17 +4,14 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
-#include "../puun/puun.h"
-#include "../puun/gf/square.h"
-#include "../puun/gf/gl_help.h"
-#include "../other/stb_image.h"
+#include <puun/puun.h>
+#include <puun/gf/square.h>
+#include <puun/gf/gl_help.h>
+#include <other/stb_image.h>
 
 #ifndef ASSETSPATH
 #define ASSETSPATH(name) "../assets/" # name
 #endif
-
-#define TAU 6.2832
-
 
 struct Game_Memory {
     u32 ImageId;
