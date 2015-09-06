@@ -70,7 +70,7 @@ void init_geometry(Data game_memory) {
     int i;
 #if 1
     for(i=0;i<6;i++) {
-        v2 a = {};
+        v2 a = ZERO_STRUCT;
         a.x = cos(i*TAU/6.f);
         a.y = sin(i*TAU/6.f);
         mem->hexagon[i] = a;
@@ -85,11 +85,11 @@ void init_geometry(Data game_memory) {
     for(i=2, j=0; i<7; i++) {
         Polygon* p = &mem->ps[i];
         p->num = 12;
-        v2 base = {};
+        v2 base = ZERO_STRUCT;
         base.x = 0.7*cos((i-1)*TAU/6.f);
         base.y = 0.7*sin((i-1)*TAU/6.f);
         for(j=0; j<p->num; j++) {
-            v2 a = {};
+            v2 a = ZERO_STRUCT;
             a.x = 0.2*cos(j*TAU/p->num);
             a.y = 0.2*sin(j*TAU/p->num);
             if(i%3!=0){ if(j%3 == 0)
@@ -114,9 +114,9 @@ void init_geometry(Data game_memory) {
     p->value[10] = new_v2(0.1, -0.1);
     p->value[11] = new_v2(0.3, -0.1);
 
-    p = &mem->ps[1];  
+    p = &mem->ps[1];
     p->num = 20;
-    v2 base = {};
+    v2 base = ZERO_STRUCT;
     base.x = 0.7;
     base.y = 0;
     float innerWidth = 0.15;

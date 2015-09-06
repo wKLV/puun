@@ -16,18 +16,30 @@ typedef int16_t s16;
 typedef int32_t s32;
 typedef int64_t s64;
 
-typedef int8_t b8;
-typedef int16_t b16;
-typedef int32_t b32;
-typedef int64_t b64;
+typedef uint8_t b8;
+typedef uint16_t b16;
+typedef uint32_t b32;
+typedef uint64_t b64;
 
 typedef float f32;
 typedef double f64;
 
+// STRUCT INITIALIZER
+//#ifdef MSVC
+#if _MSC_VER
+#define ZERO_STRUCT {0}
+#else
+#define ZERO_STRUCT {}
+#endif
+
 // MATH STUFF
 #define TAU 6.28318530717958647692
+
+#ifndef _MSC_VER
 #define min(x,y) (((x)<(y))?(x):(y))
 #define max(x,y) (((x)>(y))?(x):(y))
+#endif
+
 #define clamp(x, min, max) (((x)>(max))?(max):(((x)<(min))?(min):(x)))
 
 

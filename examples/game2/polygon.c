@@ -13,7 +13,7 @@ b32 intersect_polygon(Polygon a, Polygon b) {
 
 
 PolygonList create_polygonList(u8 program, Polygon* polygons) {
-    PolygonList pl = {};
+    PolygonList pl = ZERO_STRUCT;
     pl.polygons = polygons;
 
     pl.polygons_length = 0;
@@ -75,7 +75,7 @@ void render_polygonList(PolygonList pl, Data* unis_untyped, s32 unis_length) {
 }
 
 TriangleList create_triangleList(u8 program, Triangle* triangles) {
-    TriangleList tl = {};
+    TriangleList tl = ZERO_STRUCT;
 
     tl.triangles_length = 0;
     tl.triangles = triangles;
@@ -86,6 +86,12 @@ TriangleList create_triangleList(u8 program, Triangle* triangles) {
 }
 
 typedef DOUBLE_LINKED_LIST(Vertex) Vertex_Doubled_Link;
+#if _MSC_VER
+//NOTE: 100 vertices ought to be sufficient for anyone
+#define SUFFICIENTLYLARGENUMBER 100
+#else
+#define SUFFICIENTLYLARGENUMBER p.num
+#endif
 
 TriangleList triange_list_from_polygon(u8 program, Polygon* ps, s32 polygon_count, Data d, Data d2) {
     Triangle* outData = (Triangle*)d;
@@ -93,25 +99,25 @@ TriangleList triange_list_from_polygon(u8 program, Polygon* ps, s32 polygon_coun
     int i, dataI;
     for(i=0, dataI=0; i<polygon_count; ++i)
     {
-        Polygon p = ps[i]; 
-        Vertex_Doubled_Link verts[p.num];
+        Polygon p = ps[i];
+        Vertex_Doubled_Link verts[SUFFICIENTLYLARGENUMBER];
         int j;
         for(j=0; j<p.num; ++j) {
-            Vertex_Doubled_Link* v = &verts[j]; 
+            Vertex_Doubled_Link* v = &verts[j];
             v->value = p.value[j];
-            v->next = verts + ((j + 1) % p.num);            
-            v->previous = verts + ((j +p.num - 1) % p.num);            
+            v->next = verts + ((j + 1) % p.num);
+            v->previous = verts + ((j +p.num - 1) % p.num);
         }
         Vertex_Doubled_Link* currentVertex = &verts[0];
         b32 isError = false;;
-        Vertex_Doubled_Link* first[p.num];
+        Vertex_Doubled_Link* first[SUFFICIENTLYLARGENUMBER];
         first[0] = currentVertex;
         s32 manyFirst = 1;
-        b32 isFirstRound[p.num];
+        b32 isFirstRound[SUFFICIENTLYLARGENUMBER];
         for(j=0; j<p.num; ++j) {
             isFirstRound[j] = true;
         }
-        while(currentVertex->next != currentVertex 
+        while(currentVertex->next != currentVertex
             && currentVertex->next->next != currentVertex
             && !isError)
         {
@@ -131,22 +137,22 @@ TriangleList triange_list_from_polygon(u8 program, Polygon* ps, s32 polygon_coun
           //v2 toNext = sub_v2(currentVertex->next->value, currentVertex->value);
           //v2 toNextFromNextNext = sub_v2(currentVertex->next->value, currentVertex->next->next->value);
             #if 0
-            float angle = angle_between_v2(toNext,toPrevious);   
-            float angle2 = angle_between_v2(toNext,toNextNext);   
+            float angle = angle_between_v2(toNext,toPrevious);
+            float angle2 = angle_between_v2(toNext,toNextNext);
 
             if(angle > TAU/2) {
-                assert(0 > 0); //THERES PROBLEM 
+                assert(0 > 0); //THERES PROBLEM
             }
             if(angle2 > TAU/2) {
-                assert(0); //THERES PROBLEM 
+                assert(0); //THERES PROBLEM
             }
             #endif
-            float angle = angle_between_ABC(currentVertex->value, currentVertex->next->value, currentVertex->next->next->value);   
+            float angle = angle_between_ABC(currentVertex->value, currentVertex->next->value, currentVertex->next->next->value);
             assert(angle<TAU && angle >=0);
             //angle = TAU - angle;
             if(angle < TAU/2) {
                 //printf("i:%d angle:%f angle2:%f\n", i, 360/TAU*angle, 360/TAU*angle2);
-                Triangle t = {};
+                Triangle t = ZERO_STRUCT;
                 t.vertices[0] = currentVertex->value;
                 t.vertices[1] = currentVertex->next->value;
                 t.vertices[2] = currentVertex->next->next->value;
@@ -178,7 +184,7 @@ void triangleList_update_pos(TriangleList tl, Data d) {
         int vertex; int dimension;
         for(vertex=0; vertex<3; ++vertex) {
             for(dimension=0; dimension<2; ++dimension)
-                data[dataI++] = t.vertices[vertex].els[dimension]; 
+                data[dataI++] = t.vertices[vertex].els[dimension];
         }
     }
     assert(tl.triangles_length*3*2 == dataI);
@@ -205,5 +211,5 @@ void render_triangleList(TriangleList tl, Data* unis_untyped, s32 unis_length) {
     glEnableVertexAttribArray(pos);
 
     glDrawArrays(GL_TRIANGLES, 0, tl.triangles_length*3);
-  
+
 }

@@ -3,7 +3,7 @@
 #include <math.h>
 
 Square create_square(float width, float height) {
-    Square square = {};
+    Square square = ZERO_STRUCT;
     square.height = height;
     square.width = width;
 
@@ -26,7 +26,7 @@ void square_rotateTo(Square* square, float angle) {
 
 
 SquareList create_square_list(u8 program, Data squares) {
-    SquareList sl = {};
+    SquareList sl = ZERO_STRUCT;
     sl.squares = squares;
     sl.squares_length = 0;
 

@@ -10,7 +10,7 @@
 
 #include "sdl_common.c"
 void sdl_update() {
-    SDL_Event event = {0};
+    SDL_Event event = ZERO_STRUCT;
     while(SDL_PollEvent(&event)!= 0){
         if(event.type == SDL_QUIT){ game_die(game_memory); return; }
         else if(event.type == SDL_MOUSEMOTION) {

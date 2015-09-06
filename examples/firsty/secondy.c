@@ -67,7 +67,7 @@ void init(Data game_memory) {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(1);
 
-    Square s = {};
+    Square s = ZERO_STRUCT;
     s.width = 0.8; s.height = 0.1;
     s.u1 = 0./512; s.u2= 256./512;
     s.v1 = 0./256; s.v2 = 49./256;
@@ -144,7 +144,7 @@ void updateNrender(Data game_memory){
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData uniImg = {};
+    UniformData uniImg = ZERO_STRUCT;
     uniImg.name = (u8*)"texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;

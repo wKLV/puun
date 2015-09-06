@@ -13,7 +13,7 @@ struct SpriteSheetData {
 };
 
 
-struct SpriteSheetData spritesheets[512] = {};
+struct SpriteSheetData spritesheets[512] = ZERO_STRUCT;
 s32 spritesheets_length = 0;
 GLuint Program;
 GLuint Buffer;
@@ -25,11 +25,11 @@ SpriteSheet* loadSpriteSheet(String loc) {
     Image = stbi_load(loc, &x, &y, &n, 0);
     ImageId = setupTexture(Image, x, y);
 
-    struct SpriteSheetData data = {};
+    struct SpriteSheetData data = ZERO_STRUCT;
     data.ImageId = ImageId;
     assert(spritesheets_length<512);
     s32 id = spritesheets_length++;
-    SpriteSheet sheet = {};
+    SpriteSheet sheet = ZERO_STRUCT;
     sheet.id = id;
     data.spritesheet = sheet;
 
@@ -52,7 +52,7 @@ SpriteList spritesFromSheet(SpriteSheet s, Data squares){
     Program = setupProgram(vs, 0, fs, 0);
     SquareList sl = create_square_list(Program, squares);
 
-    SpriteList splist = {};
+    SpriteList splist = ZERO_STRUCT;
     splist.squareList = sl;
     splist.ImageId = spritesheets[s.id].ImageId;
     return splist;

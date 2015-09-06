@@ -11,7 +11,7 @@ typedef union V2 {
 } v2;
 
 v2 new_v2(float x, float y) {
-    v2 result = {};
+    v2 result = ZERO_STRUCT;
     result.x = x;
     result.y = y;
     return result;
@@ -28,7 +28,7 @@ typedef union V3 {
 } v3;
 
 v3 new_v3(float x, float y, float z) {
-    v3 result = {};
+    v3 result = ZERO_STRUCT;
     result.x = x;
     result.y = y;
     result.z = z;
@@ -45,7 +45,7 @@ typedef union V4 {
     float els[4];
 } v4;
 v4 new_v4(float x, float y, float z, float w) {
-    v4 result = {};
+    v4 result = ZERO_STRUCT;
     result.x = x;
     result.y = y;
     result.z = z;
@@ -62,7 +62,7 @@ float lengthSq_v##n(v##n v);\
 v##n normalized_v##n(v##n v);\
 \
 v##n add_v##n(v##n a, v##n b) {\
-    v##n result = {};\
+    v##n result = ZERO_STRUCT;\
     int i;\
     for(i=0; i<n;++i)\
         result.els[i] = a.els[i] +b.els[i];\
@@ -70,7 +70,7 @@ v##n add_v##n(v##n a, v##n b) {\
 }\
 \
 v##n minus_v##n(v##n v) {\
-     v##n result = {};\
+     v##n result = ZERO_STRUCT;\
     int i;\
     for(i=0; i<n;++i)\
         result.els[i] = - v.els[i];\
@@ -78,7 +78,7 @@ v##n minus_v##n(v##n v) {\
 }\
 \
 v##n sub_v##n(v##n a, v##n b) {\
-    v##n result = {};\
+    v##n result = ZERO_STRUCT;\
     b = minus_v##n(b);\
     result = add_v##n(a, b);\
     return result;\
@@ -120,7 +120,7 @@ puun_create_vector(4);
 #include "math.h"
 #if 1
 v2 normalized_v2(v2 v) {
-     v2 result = {};
+     v2 result = ZERO_STRUCT;
      float length = lengthSq_v2(v);
      length = sqrtf(length);
      assert(length);
@@ -143,7 +143,7 @@ float angle_between_ABC(v2 a, v2 b, v2 c) {
     result = -result;
     result += TAU;
     result = fmod(result, TAU);
-    return result; 
+    return result;
 }
 
 //TODO Optimize this or something D:

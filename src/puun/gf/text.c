@@ -4,7 +4,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../../other/stb_truetype.h"
 
-struct gfFontData gfTextStyles[255] = {};
+struct gfFontData gfTextStyles[255] = ZERO_STRUCT;
 u8 gfTextStyles_length = 0;
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -12,7 +12,7 @@ u8 gfTextStyles_length = 0;
 
 gf_textStyle initTextStyle(u8* font_pos,
         f32 pixels, u32 color) {
-    gf_textStyle s = {};
+    gf_textStyle s = ZERO_STRUCT;
 
     stbtt_fontinfo* font= malloc(sizeof(stbtt_fontinfo));
     u8* buffer = malloc(1000000);
@@ -42,7 +42,7 @@ gf_textStyle initTextStyle(u8* font_pos,
         stbtt_MakeCodepointBitmap(font, location, width, height, gf_TEXT_STRIDE, scale, scale, c);
 
 
-        struct gfCharacterData ch = {};
+        struct gfCharacterData ch = ZERO_STRUCT;
         ch.beggining = lastPos*1.f / gf_TEXT_LENGTH;
         ch.end = (lastPos += height)*1.f /gf_TEXT_LENGTH;
         ch.width = width*1.f;

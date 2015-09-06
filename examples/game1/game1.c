@@ -53,12 +53,12 @@ void init(Data game_memory) {
     mem->sprites = spritesFromSheet(*mem->sheet, mem->square_data);
 
     Square* squares = mem->sprites.squareList.squares;
-    Position x = {};
+    Position x = ZERO_STRUCT;
     x.x = p2v(400);
     x.y = p2v(400);
     x.z =0;
     x.rotation =0;
-    Square paddle = {};
+    Square paddle = ZERO_STRUCT;
     paddle.position = x;
     paddle.width = p2vs(256);
     paddle.height = p2vs(50);
@@ -77,7 +77,7 @@ void init(Data game_memory) {
     paddle.v2 = 50.0/256;
     squares[1] = paddle;
 
-    Square ball_ = {};
+    Square ball_ = ZERO_STRUCT;
     ball_.position = x;
     ball_.position.x = p2v(500);
     ball_.width = p2vs(100);

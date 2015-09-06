@@ -153,15 +153,15 @@ void updateNrender(Data game_memory){
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    UniformData data[3] = {};
+    UniformData data[3] = ZERO_STRUCT;
 
-    UniformData uni = {};
+    UniformData uni = ZERO_STRUCT;
     uni.name = (u8*)"world";
     uni.dataStructure = M3;
     uni.dataType = GL_FLOAT;
     uni.data = mem->paddleMatrix;
 
-    UniformData uniImg = {};
+    UniformData uniImg = ZERO_STRUCT;
     uniImg.name = (u8*)"texture";
     uniImg.dataStructure = Texture;
     uniImg.texnum = 0;
