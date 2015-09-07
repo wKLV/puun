@@ -13,7 +13,7 @@ void platform_die() {
 #endif
     SDL_Quit();
 };
-#if 0 //This was a horrible idea //TODO: Logger
+#if 0 //This was a horrible idea //#TODO:40 Logger
 #ifdef WDS
 #define printf(format, value) \
     {FILE* wdsoutputfile = fopen("log.txt", "a");\
