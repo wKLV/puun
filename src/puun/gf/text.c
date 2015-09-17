@@ -112,7 +112,7 @@ bool gfTextFit(gfText gfText) {
             xpos += scale*stbtt_GetCodepointKernAdvance(
                     font, text[ch],text[ch+1]);
         if(xpos>bbox.w) {
-            ypos += ascent -descent + lineGap;
+            ypos += lineGap;
             xpos = 0;
 
             stbtt_GetCodepointHMetrics(font, text[ch],
@@ -122,7 +122,9 @@ bool gfTextFit(gfText gfText) {
                 xpos += scale*stbtt_GetCodepointKernAdvance(
                         font, text[ch],text[ch+1]);
         }
-        if(ypos>bbox.h) return false;
+        if(ypos>bbox.h){
+            return false;
+        }
         ++ch;
     }
     return true;
@@ -228,24 +230,18 @@ void gfTextRender(gfText gfText) {
 
         int advance,lsb;//,x0,y0,x1,y1;
         // UNUSED float x_shift = xpos - (float) floor(xpos);
-        stbtt_GetCodepointHMetrics(font, *text,
+        stbtt_GetCodepointHMetrics(font, text[0],
                 &advance, &lsb);
         xpos += (advance * scale);
         if (text[1])
             xpos += scale*stbtt_GetCodepointKernAdvance(
                     font, text[0],text[1]);
-#if 0
-        if(xpos>bbox.w) {
-            ypos += ascent -descent + lineGap;
-            xpos = 0;
-
-            stbtt_GetCodepointHMetrics(font, text[ch],
-                    &advance, &lsb);
-            xpos += (advance * scale);
-            if (text[ch+1])
-                xpos += scale*stbtt_GetCodepointKernAdvance(
-                        font, text[ch],text[ch+1]);
+#if 1
+        if(xpos>bbox.w+bbox.x) {
+            ypos -= lineGap;
+            xpos = bbox.x;
         }
+
 #endif
         ++text;
     }

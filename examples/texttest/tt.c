@@ -48,8 +48,8 @@ void init(Data game_memory){
     BBox bbox = {0};
     bbox.x = -256;
     bbox.y = 0;
-    bbox.w = 420;
-    bbox.h = 0;
+    bbox.w = 300;
+    bbox.h = 250;
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
     text.text = (u8*)"HELLO WORLD         From the oTHER Side                  ";
