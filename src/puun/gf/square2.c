@@ -47,13 +47,13 @@ void squareList_update_pos(SquareList sl, Data d) {
               rx = s.width/2, ty = s.height/2,
               co = cos(s.position.rotation),
               si = sin(s.position.rotation);
-        float blx =   co*lx + si*by + s.position.x;
+        float blx = + co*lx + si*by + s.position.x;
         float bly = - si*lx + co*by + s.position.y;
-        float brx =   co*rx + si*by + s.position.x;
+        float brx = + co*rx + si*by + s.position.x;
         float bry = - si*rx + co*by + s.position.y;
-        float tlx =   co*lx + si*ty + s.position.x;
+        float tlx = + co*lx + si*ty + s.position.x;
         float tly = - si*lx + co*ty + s.position.y;
-        float trx =   co*rx + si*ty + s.position.x;
+        float trx = + co*rx + si*ty + s.position.x;
         float try = - si*rx + co*ty + s.position.y;
         { // Vertex Bottom Left
             //pos

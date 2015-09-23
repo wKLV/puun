@@ -88,10 +88,11 @@
         * [X] sdl_swapbuffers
         * [X] platform callbacks...
 ==ideas==
+    * [ ] Complex meshes scene
     * [ ] puun modulable
-        * Every piece should have the least requirements
+        * Every piece should have the least possible requirements
         * But they should fit together seamlessly from user perspective
-        * On puun development, add a hot swappig module ala hh
+        * On dev_puun, add a hot swappig module ala hh
     * [ ] Game world. 
         * It could have general game information
         * It could list entities and iterate over them
