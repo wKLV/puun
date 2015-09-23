@@ -86,6 +86,7 @@ void square_render(u8 program, GLsizei elems, UniformData* unis, int unis_length
     for(i=0; i<unis_length; i++){
         setParam(program, unis[i]);
     }
+    glEnableVertexAttribArray(positionLoc);
 
     glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, (void*)0);
 }

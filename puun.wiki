@@ -9,8 +9,11 @@
         * [ ] Load atlas from description text
         * [ ] Access atlas to get sprite
     * [o] Text rendering
-        * A letter renderd FYEAH!
+        * A letter rendered FYEAH!
         * [O] A lib (gf/text?) to render text ala render_squares
+        * [o] Multiline
+            * [O] wrap line
+            * [ ] Detect where it should wrap
     * [o] Sound
         * [ ] Music support somehow?
         * Work f*ker
@@ -22,22 +25,57 @@
         * [ ] html workaraound if needed
     * [ ] Entity system
         * purrhaps not required? :3
+            * purrbrably yes :/
     * [o] Platforms
         * [X] Linux
             * I should make it more shippable, but hey, good enough for now.
+            * [O] Developer version
         * [o] Emscripten
             * Should be better
+                * At least I should automate the removal of the emscripten border
         * [X] Windows
             * More shippable, but yeah.
+            * [O] Developer version
         * [ ] Mac Os x
         * [ ] Mobiles
             * [ ] Android
             * [ ] IOS
     * [ ] Physics?
+        * Yeah, please
     * [ ] 3D graphics
         * Amazing
 ==bugs / fixes==
+    * [ ] Fix framerate to try to be constant
+        * Perhaps sdl can do this somehow already. INVESTIGATE
+    * [ ] Code style is already beginning to be messy. UNIFY
     * [ ] Remake game1 with proper 2d physics
+    * I'm copying rando thoughts I anotated on another project
+        //OK, let's try this. I'm going to make a grid of 3x3 squares
+        //It works now. But i have had problems susing my APIs making dumb mistakes or forgettingdetails
+        // Name conventions are super broken
+            // Ok, let's wait for a more stable release and we will make a sweep
+        // Most of /gf must be redone to be sensible
+            // Yes, I learnt quite w/ game2 polygon example, I feel that already would imporve
+            // However, I have not done a more complex mesh demo
+            // So, I'd rather wait a bit
+        // I'm not happy with the ease to throw things into the pit
+            //Shaders are a bit cucombersome right now. An application to ease this would be cool.
+            // I feel like the developer version could be improved 
+            // by adding a terminal that allowed you to modify entities
+            // and stuff. However, there is no concept of world and entities yet 
+        // Eg: Getting a hello world texts takes a bit, and you have to remember to set alphas
+            // This should be fixable maing a gf/gl_help reasonable_init();
+            // About getting text, there is not that muxh I can do about that. 
+            // I could make a developer only font for debugging purposes
+            // that worked with the hipotetical terminal to whrow stuff in
+        // Getting a few squares is unreasonably complicated with all the update_pos & all routine
+            // Yeah, must be redone
+        // Also mem->square_list.squares_length is a problem
+            // An interesting problem of API design, IMHO. Let's see what I will come up with
+        // Remembering when I have virtual coordinates versus screen coordinates is becoming frustrating. REALLY DO THIS
+            // Yeah, perhaps addig a concept of world to the pit would help
+        // Also, I need a better allocation method
+        
     * [X] Game1 ran at different speeds in different computers depending
         on clock speed. Now the puun.h layer supoorts a getTimeElapsed
         that returns ms from the last call, which should do the trick
@@ -50,22 +88,27 @@
         * [X] sdl_swapbuffers
         * [X] platform callbacks...
 ==ideas==
+    * [ ] puun modulable
+        * Every piece should have the least requirements
+        * But they should fit together seamlessly from user perspective
+        * On puun development, add a hot swappig module ala hh
+    * [ ] Game world. 
+        * It could have general game information
+        * It could list entities and iterate over them
+    * [ ] Input for objects, like isMouseOver(Square1) isMouseClick()
     * [O] Crazy handmade like development tricks
         * [X] hot loading for linux
+            * [X] And windowd too now!
         * [ ] Arena allocation
+        * [ ] In game menu/terminal to change stuff
     * [ ] Screen vs Virtual coordinate system
+        * SERIOULSY
+        * Perhaps under GameWorld?
     * [ ] Description text for initialization
+        * [ ] JSON? there are pseudo stb libraries that do the job...
         * [ ] Simple to write, perhaps bakeable?
         * STUPID IDEA STUPID STUPID STUPID
             * #define SPRITE_X 50\n #define SPRITE_Y 51
                 * We define the macro to use it like #define SPRITE_X getX("sprite")
                 * * Read wold be just scanf("#define blabla%s %s\n", foo, bar)
                 * You could include on compile time and it would be baked
-    * [ ] gf/text
-        * a text struct for a phrase
-            * pos, bbox would be ideal
-                * What if it doesn't fit?
-                * A: Render anyway
-                * B: Complain
-        * a render_text function
-            * Takes a text struct perhaps some other info?

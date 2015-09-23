@@ -48,7 +48,7 @@ void init(Data game_memory){
     BBox bbox = {0};
     bbox.x = -256;
     bbox.y = 0;
-    bbox.w = 300;
+    bbox.w = 200;
     bbox.h = 250;
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
@@ -105,7 +105,7 @@ void updateNrender(Data game_memory){
    // glClearColor(1.0, 1.0, 1.0, 1.0);
    // glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-  //  gfTextRenderChungo(text);
+ 
 //    UniformData uniImg = {0};
 //    uniImg.name = "texture";
 //    uniImg.dataStructure = Texture;
@@ -123,10 +123,14 @@ void updateNrender(Data game_memory){
     float time = ms/1000.f;
     totalTime += time;
     char contentText[256];
-    sprintf(contentText, "HELLO WORLD   %u     From the oTHER Side", ms);
+    text.bbox.x = 256*sinf(0.5f*totalTime)-128;
+    text.bbox.y = 70*cosf(0.5f*totalTime*0.3);
+    text.bbox.w = 512*sinf(0.75f*totalTime+TAU/2.0f)+512+40;
+    text.bbox.h = 512*cosf(0.75f*totalTime+TAU/2.0f)+512+120;
+    b32 fits = gfTextFit(text);
+    assert(fits);
+    sprintf(contentText, "HELLO WORLD %d  %u     From the oTHER Side", fits, ms);
     text.text= (u8*)contentText;
-    text.bbox.x = 512*sinf(totalTime)-256;
-    text.bbox.y = 70*cosf(totalTime*0.3);
     glClearColor(0.5, 0.75, 0.25, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     gfTextRender(text);

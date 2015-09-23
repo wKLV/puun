@@ -170,6 +170,22 @@ void render_squareList(SquareList sl, Data* unis_untyped,
     for(i=0; i<unis_length; i++){
         setParam(sl.program, unis[i]);
     }
+    GLint pos = glGetAttribLocation(sl.program, "position");
+    GLint uv = glGetAttribLocation(sl.program, "uv");
+    GLint scale = glGetAttribLocation(sl.program, "scale");
+
+    u8 stride = (3+2+2)*sizeof(float);
+
+    glBindBuffer(GL_ARRAY_BUFFER, sl.pos_buffer);
+    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE,
+            stride, 0);
+    glEnableVertexAttribArray(pos);
+    glVertexAttribPointer(uv, 2, GL_FLOAT, GL_FALSE,
+            stride, (Data)(3*sizeof(float)));
+    glEnableVertexAttribArray(uv);
+    glVertexAttribPointer(scale, 2, GL_FLOAT, GL_FALSE,
+            stride, (Data)(5*sizeof(float)));
+    glEnableVertexAttribArray(scale);
 
     glDrawArrays(GL_TRIANGLES, 0, 6*sl.squares_length);
 }
