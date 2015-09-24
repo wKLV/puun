@@ -24,6 +24,7 @@ PolygonList create_polygonList(u8 program, Polygon* polygons) {
     return pl;
 }
 
+// TODO: Do i want this or should I always triangulate?
 void polygonList_update_pos(PolygonList* pl, Data d, Data d2) {
     float* data = (float*)d;
     int* els = (int*)d2;
@@ -36,6 +37,8 @@ void polygonList_update_pos(PolygonList* pl, Data d, Data d2) {
             data[dataI++] = p.value[j].x;
             data[dataI++] = p.value[j].y;
         }
+        //NOTE: triangulate naively polygon
+        // TODO: Should I use the same code I use in triangulate for this?
         int polygonFirst = verI;
         int polygonGreat = polygonFirst;
         while(polygonGreat<polygonFirst+p.num-2) {
@@ -88,6 +91,7 @@ TriangleList create_triangleList(u8 program, Triangle* triangles) {
 typedef DOUBLE_LINKED_LIST(Vertex) Vertex_Doubled_Link;
 #if _MSC_VER
 //NOTE: 100 vertices ought to be sufficient for anyone
+//NOTE: this is because msc can't make an array of length varying on instance
 #define SUFFICIENTLYLARGENUMBER 100
 #else
 #define SUFFICIENTLYLARGENUMBER p.num
@@ -99,6 +103,7 @@ TriangleList triange_list_from_polygon(u8 program, Polygon* ps, s32 polygon_coun
     int i, dataI;
     for(i=0, dataI=0; i<polygon_count; ++i)
     {
+        // TODO: Should I pull this to triangule_polygon?
         Polygon p = ps[i];
         Vertex_Doubled_Link verts[SUFFICIENTLYLARGENUMBER];
         int j;
@@ -106,10 +111,11 @@ TriangleList triange_list_from_polygon(u8 program, Polygon* ps, s32 polygon_coun
             Vertex_Doubled_Link* v = &verts[j];
             v->value = p.value[j];
             v->next = verts + ((j + 1) % p.num);
+            //TODO I'm not using previous. Should delete and make a note?
             v->previous = verts + ((j +p.num - 1) % p.num);
         }
         Vertex_Doubled_Link* currentVertex = &verts[0];
-        b32 isError = false;;
+        b32 isError = false;
         Vertex_Doubled_Link* first[SUFFICIENTLYLARGENUMBER];
         first[0] = currentVertex;
         s32 manyFirst = 1;
@@ -121,47 +127,36 @@ TriangleList triange_list_from_polygon(u8 program, Polygon* ps, s32 polygon_coun
             && currentVertex->next->next != currentVertex
             && !isError)
         {
+            // NOTE Check for entering cycles
+            // We check if we have been on this vertex before
             for(j=0; j<manyFirst; ++j)
                 if(currentVertex == first[j]) {
                     if(!isFirstRound[j]) {
                         isError = true;
-                        printf("ERROR %d\n", i);
+                        printf("ERROR %d\n", i); //TODO Logging Debugging
                         break;
                     }
                 }
         if(!isError)
         {
-           // if(!currentVertex->next->next == currentVertex) {
-
-          //  v2 toPrevious = sub_v2(currentVertex->previous->value, currentVertex->value);
-          //v2 toNext = sub_v2(currentVertex->next->value, currentVertex->value);
-          //v2 toNextFromNextNext = sub_v2(currentVertex->next->value, currentVertex->next->next->value);
-            #if 0
-            float angle = angle_between_v2(toNext,toPrevious);
-            float angle2 = angle_between_v2(toNext,toNextNext);
-
-            if(angle > TAU/2) {
-                assert(0 > 0); //THERES PROBLEM
-            }
-            if(angle2 > TAU/2) {
-                assert(0); //THERES PROBLEM
-            }
-            #endif
             float angle = angle_between_ABC(currentVertex->value, currentVertex->next->value, currentVertex->next->next->value);
             assert(angle<TAU && angle >=0);
-            //angle = TAU - angle;
-            if(angle < TAU/2) {
-                //printf("i:%d angle:%f angle2:%f\n", i, 360/TAU*angle, 360/TAU*angle2);
+
+            if(angle < TAU/2) { //Check for concavity
+                // TODO Check if other vertices fall inside this triangle
+
+                // Convex angle, triangulate
                 Triangle t = ZERO_STRUCT;
                 t.vertices[0] = currentVertex->value;
                 t.vertices[1] = currentVertex->next->value;
                 t.vertices[2] = currentVertex->next->next->value;
                 outData[dataI++] = t;
 
+                // Note: go on skupping ear
                 currentVertex->next = currentVertex->next->next;
             }
             else {
-            //    printf("Stuff i:%d\n", i);
+                // NOTE: This triangle would not be correct, go on
                 currentVertex = currentVertex->next;
                 isFirstRound[manyFirst++] = false;
             }
