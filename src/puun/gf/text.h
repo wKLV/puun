@@ -1,6 +1,7 @@
 #ifndef puuntexth
 #define puuntexth
 #include "../types.h"
+#include "../math_types.h"
 
 typedef struct {
     u8 id;
@@ -32,7 +33,7 @@ struct gfFontData {
 };
 
 typedef struct {
-    BBox bbox;
+    Rectangle bbox;
     u8* text;
     gf_textStyle style;
 } gfText;
@@ -40,7 +41,7 @@ typedef struct {
 gf_textStyle initTextStyle(u8* font_pos,
         f32 pixels, u32 color);
 
-BBox gfTextNeeded(u8* text, gf_textStyle style);
+Rectangle gfTextNeeded(u8* text, gf_textStyle style);
 
 bool gfTextFit(gfText text);
 

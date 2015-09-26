@@ -92,7 +92,7 @@ gf_textStyle initTextStyle(u8* font_pos,
 
 bool gfTextFit(gfText gfText) {
     gf_textStyle style = gfText.style;
-    BBox bbox = gfText.bbox;
+    Rectangle bbox = gfText.bbox;
     u8* text = gfText.text;
     stbtt_fontinfo* font = (stbtt_fontinfo*) gfTextStyles[style.id].font;
 
@@ -111,7 +111,7 @@ bool gfTextFit(gfText gfText) {
         if (text[ch+1])
             xpos += scale*stbtt_GetCodepointKernAdvance(
                     font, text[ch],text[ch+1]);
-        if(xpos>bbox.w) {
+        if(xpos>width_rectangle(bbox)) {
             ypos += lineGap;
             xpos = 0;
 
@@ -122,7 +122,7 @@ bool gfTextFit(gfText gfText) {
                 xpos += scale*stbtt_GetCodepointKernAdvance(
                         font, text[ch],text[ch+1]);
         }
-        if(ypos>bbox.h){
+        if(ypos>height_rectangle(bbox)){
             return false;
         }
         ++ch;
@@ -133,7 +133,7 @@ bool gfTextFit(gfText gfText) {
 
 void gfTextRender(gfText gfText) {
     gf_textStyle style = gfText.style;
-    BBox bbox = gfText.bbox;
+    Rectangle bbox = gfText.bbox;
     u8* text = gfText.text;
     stbtt_fontinfo* font = (stbtt_fontinfo*) gfTextStyles[style.id].font;
 
@@ -142,7 +142,7 @@ void gfTextRender(gfText gfText) {
     int i, ascent, descent, lineGap; //TODO VERTICAL MOVEMENT
 
     stbtt_GetFontVMetrics(font, &ascent, &descent, &lineGap);
-    f32 xpos = bbox.x, ypos = bbox.y;
+    f32 xpos = bbox.x1, ypos = bbox.y1;
 
     u32 length = strlen((char*)text) +0;
     struct gfFontData fontData = gfTextStyles[style.id];
@@ -237,9 +237,9 @@ void gfTextRender(gfText gfText) {
             xpos += scale*stbtt_GetCodepointKernAdvance(
                     font, text[0],text[1]);
 #if 1
-        if(xpos>bbox.w+bbox.x) {
+        if(xpos>bbox.x2) {
             ypos -= lineGap;
-            xpos = bbox.x;
+            xpos = bbox.x1;
         }
 
 #endif

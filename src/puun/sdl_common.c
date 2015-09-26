@@ -6,6 +6,8 @@ static Data game_memory;
 #include "puun.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
+#define puun_implement_math 1
+#include "math_types.h"
 void platform_die() {
     running = false;
 #ifdef JS

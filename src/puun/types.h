@@ -61,18 +61,16 @@ typedef double f64;
 typedef ARRAY_DEFINE(Data) DataArray;
 
 //COMMON DATA STRUCTURES
-#define DOUBLE_LINKED_LIST(type)\
+#define LINKED_LIST(type)\
 struct type##_Linked_List{\
-    struct type##_Linked_List* next;\
-    struct type##_Linked_List* previous;\
     type value;\
+    struct type##_Linked_List* next;\
 }
 
-// gx types
-typedef struct {
-    f32 x;
-    f32 y;
-    f32 w;
-    f32 h;
-} BBox;
+#define DOUBLE_LINKED_LIST(type)\
+struct type##_DoubleLinked_List{\
+    type value;\
+    struct type##_DoubleLinked_List* next;\
+    struct type##_DoubleLinked_List* previous;\
+}
 #endif

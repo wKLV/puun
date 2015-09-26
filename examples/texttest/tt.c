@@ -45,11 +45,11 @@ void init(Data game_memory){
 #endif
     gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Medium.ttf), 24., 0);
     gfText text;
-    BBox bbox = {0};
-    bbox.x = -256;
-    bbox.y = 0;
-    bbox.w = 200;
-    bbox.h = 250;
+    Rectangle bbox = ZERO_STRUCT;
+    bbox.x1 = -256;
+    bbox.y1 = 0;
+    bbox.x2 = -56;
+    bbox.y2 = 250;
     //text = {0}; //FIX:WDS COMPLAIN: {bbox, "HELLO WORLD      jump line", style};
     text.bbox = bbox;
     text.text = (u8*)"HELLO WORLD         From the oTHER Side                  ";
@@ -123,10 +123,11 @@ void updateNrender(Data game_memory){
     float time = ms/1000.f;
     totalTime += time;
     char contentText[256];
-    text.bbox.x = 256*sinf(0.5f*totalTime)-128;
-    text.bbox.y = 70*cosf(0.5f*totalTime*0.3);
-    text.bbox.w = 512*sinf(0.75f*totalTime+TAU/2.0f)+512+40;
-    text.bbox.h = 512*cosf(0.75f*totalTime+TAU/2.0f)+512+120;
+    //f32 x1 = 256*sinf(0.5f*totalTime)-128;
+    f32 y1 = 70*cosf(0.5f*totalTime*0.3);
+    f32 w = 512*sinf(0.75f*totalTime+TAU/2.0f)+512+40;
+    f32 h = 512*cosf(0.75f*totalTime+TAU/2.0f)+512+120;
+    text.bbox = rectangle_topleft_by_widtheight(-256.f, y1, w, h);
     b32 fits = gfTextFit(text);
     assert(fits);
     sprintf(contentText, "HELLO WORLD %d  %u     From the oTHER Side", fits, ms);
