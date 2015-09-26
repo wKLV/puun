@@ -39,6 +39,7 @@ v##n scalar_v##n(v##n v, float s);\
 float dot_v##n(v##n a, v##n b);\
 float lengthSq_v##n(v##n v);\
 v##n normalized_v##n(v##n v);\
+b32 isValid_v##n(v##n v);
 
 puun_define_vector(2);
 puun_define_vector(3);

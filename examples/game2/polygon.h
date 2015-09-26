@@ -1,7 +1,7 @@
 #ifndef puun_polygonh
 #define puun_polygonh
 #include <puun/types.h>
-#include "vector.h"
+#include <puun/math_types.h>
 
 #if 0 //TODO Perhaps we want this sometime?
 #if puun_2D

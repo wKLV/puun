@@ -5,6 +5,7 @@
 #include <puun/gf/gl_help.h>
 
 #include "polygon.h"
+#include "vector.h"
 
 b32 intersect_polygon(Polygon a, Polygon b) {
 //TODO Implement
