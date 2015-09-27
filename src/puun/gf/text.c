@@ -71,7 +71,7 @@ gf_textStyle initTextStyle(u8* font_pos,
 
     u8 vs[] = "attribute vec2 position; attribute vec2 uv;\n\
                  varying vec2 texcoord; void main(){\n\
-                     gl_Position=vec4(position/256.0, 0.0, 1.0);\n\
+                     gl_Position=vec4(position/256.0, -1.0, 1.0);\n\
                     texcoord=uv;}";
     u8 fs[] = "precision mediump float; \n\
                  uniform sampler2D texture; \n\

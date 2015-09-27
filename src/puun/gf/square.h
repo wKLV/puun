@@ -38,7 +38,7 @@ typedef struct {
 } SquareList;
 
 
-SquareList create_square_list(u8 program, Data squares);
+SquareList create_square_list(u8 program, Data squares, s32 manySquares);
 
 void squareList_update_pos(SquareList sl, Data d);
 

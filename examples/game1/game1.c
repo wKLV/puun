@@ -96,7 +96,7 @@ void init(Data game_memory) {
 
 
     gf_textStyle style = initTextStyle((u8*)ASSETSPATH(Ubuntu-Medium.ttf), 15., 0);
-    BBox bbox = {0, 0, 512, 512};
+    Rectangle bbox = rectangle_topleft_to_bottomright(0, 0, 512, 512);
     mem->text.bbox = bbox;
     mem->text.text = malloc(20*sizeof(char));
     strcpy((char*)mem->text.text, "prueba");

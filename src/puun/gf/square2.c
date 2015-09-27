@@ -25,10 +25,10 @@ void square_rotateTo(Square* square, float angle) {
 }
 
 
-SquareList create_square_list(u8 program, Data squares) {
+SquareList create_square_list(u8 program, Data squares, s32 manySquares) {
     SquareList sl = ZERO_STRUCT;
     sl.squares = squares;
-    sl.squares_length = 0;
+    sl.squares_length = manySquares;
 
     sl.program = program;
     glGenBuffers(1, &sl.pos_buffer);
@@ -148,7 +148,7 @@ void squareList_update_pos(SquareList sl, Data d) {
     u8 stride = (3+2+2)*sizeof(float);
 
     glBindBuffer(GL_ARRAY_BUFFER, sl.pos_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sl.squares_length*6*(3+2+2)*sizeof(float),
+    glBufferData(GL_ARRAY_BUFFER, sl.squares_length*stride,
             data, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE,
             stride, 0);

@@ -50,7 +50,7 @@ SpriteList spritesFromSheet(SpriteSheet s, Data squares){
                  }";
 
     Program = setupProgram(vs, 0, fs, 0);
-    SquareList sl = create_square_list(Program, squares);
+    SquareList sl = create_square_list(Program, squares, 0);
 
     SpriteList splist = ZERO_STRUCT;
     splist.squareList = sl;

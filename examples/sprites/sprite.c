@@ -1,4 +1,3 @@
-// NOTE: THIS EXAMPLE IS NOT SUPPORTED UNITL THE TODO DOWN GETS DONE
 // TODO Merge this with firsty and secondy or expand until it's at least somewhat different
 
 #include <stdio.h>
@@ -10,14 +9,12 @@
 #include <emscripten.h>
 #endif
 
-#include "../puun/puun.h"
-#include "../puun/gf/sprite.h"
+#include <puun/puun.h>
+#include <puun/gf/sprite.h>
 
 #ifndef ASSETSPATH
 #define ASSETSPATH(name) "../assets/" # name
 #endif
-
-#define TAU 6.2832
 
 Square* paddle;
 Square* ball;
@@ -112,7 +109,7 @@ void updateNrender(){
     if(hasBounced!=2 && px> 1){ bounce(-TAU/4, &vx, &vy, &av, 1.);hasBounced = 2;}
     if(hasBounced!=3 && py >1){ bounce(-TAU/2, &vx, &vy, &av, 1.); hasBounced = 3; }
     if(py <-1){
-        die();
+        game_die();
     }
     if(hasBounced!=4 && px<= paddleX+0.4 && px>=paddleX-0.4  && py<=paddleY+0.05 && py>=paddleY-0.05) {
         bounce(3/4*TAU-paddleRot, &vx, &vy, &av, 1.2);
@@ -143,9 +140,9 @@ void updateNrender(){
     //SDL_GL_SwapBuffers();
 }
 
-void die() {
+void game_die() {
     //free(buffer);
-    running = false;
     printf("YOUR SCORE IS %d\n", score);
+    platform_die();
  //   sdl_die();
 }

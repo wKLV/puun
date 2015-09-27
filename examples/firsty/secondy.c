@@ -58,7 +58,7 @@ void init(Data game_memory) {
                            }\n\
                           ";
     mem->program = setupProgram(vertexSource, sizeof(vertexSource), fragmentSource, sizeof(fragmentSource));
-    mem->Squares = create_square_list(mem->program, malloc(3*sizeof(Square)));
+    mem->Squares = create_square_list(mem->program, malloc(3*sizeof(Square)), 2);
     int x, y, n;
     u8* Image = stbi_load(ASSETSPATH(atlas.png), &x, &y, &n, 0);
     mem->ImageId = setupTexture(Image, x, y);
@@ -78,7 +78,6 @@ void init(Data game_memory) {
     s.v1 = 0./256; s.v2 = 128./256;
     s.position.z = 0;
     mem->Squares.squares[1] = s;
-    mem->Squares.squares_length = 2;
 
     mem->paddle = &mem->Squares.squares[0];
     mem->ball = &mem->Squares.squares[1];
