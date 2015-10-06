@@ -148,7 +148,7 @@ void squareList_update_pos(SquareList sl, Data d) {
     u8 stride = (3+2+2)*sizeof(float);
 
     glBindBuffer(GL_ARRAY_BUFFER, sl.pos_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sl.squares_length*stride,
+    glBufferData(GL_ARRAY_BUFFER, sl.squares_length*6*stride,
             data, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE,
             stride, 0);

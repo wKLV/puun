@@ -64,6 +64,7 @@ static b32 puun_load_game(char *path)
     is_valid = library_handle && myUpdateNrender && myInit && myGame_die;
     return is_valid;
 }
+
 static void puun_unload_game()
 {
     if (library_handle)
@@ -75,17 +76,22 @@ static void puun_unload_game()
     myInit = 0;
     myGame_die = 0;
 }
+
 #include "sdl_common.c"
+
 void sdl_update() {
     SDL_Event event = {0};
     while(SDL_PollEvent(&event)!= 0){
+
         if(event.type == SDL_QUIT){ myGame_die(game_memory); return; }
+
         else if(event.type == SDL_MOUSEMOTION) {
             //updateMouse(event.motion.x, event.motion.y);
             //TODO: Screen vs Virtual Space
             mousePositionX = event.motion.x;
             mousePositionY = event.motion.y;
         }
+
         else if(event.type == SDL_MOUSEBUTTONDOWN) {
             if(event.button.button == SDL_BUTTON_LEFT) {
                 isMouseClick |= puun_LEFT_CLICK;
@@ -98,6 +104,7 @@ void sdl_update() {
             }
               //WATCH: SDL2  isMouseClick |= event.button.clicks>1?puun_DOUBLE_CLICK:puun_NOCLICK;
         }
+
         else if(event.type == SDL_MOUSEBUTTONUP) {
             if(event.button.button == SDL_BUTTON_LEFT) {
                 isMouseClick ^= puun_LEFT_CLICK;
@@ -110,9 +117,11 @@ void sdl_update() {
             }
               //WATCH: SDL2  isMouseClick |= event.button.clicks>1?puun_DOUBLE_CLICK:puun_NOCLICK;
         }
+
         else if(event.type == SDL_KEYUP) {
             keyPressed.isPressed = 0;
         }
+
         else if(event.type == SDL_KEYDOWN) {
             keyPressed.isPressed = 1;
             keyPressed.key = event.key.keysym.sym;
@@ -155,6 +164,7 @@ void sdl_update() {
                 keyPressed.alt |= puun_FUNCKEY;
             }
         }
+
     }
     myUpdateNrender(game_memory);
 }
@@ -171,9 +181,11 @@ int main(int argc, char** args) {
         printf("error loading game code");
         return 1;
     }
+
     game_memory = calloc(1, 1<<14);
     myInit(game_memory);
     running = true;
+
     while(running) {
         sdl_update();
         struct stat library_statbuf = {};

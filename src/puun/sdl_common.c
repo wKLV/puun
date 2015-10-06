@@ -41,6 +41,9 @@ void getMouseClick(puun_MouseClick* click) {
 }
 
 u32 ticks;
+
+
+
 void getTimeElapsed(u32* time) {
     u32 nextTicks = SDL_GetTicks();
     *time = nextTicks - ticks;
