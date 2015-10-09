@@ -151,7 +151,20 @@ int WinMain(
     Mix_Init(MIX_INIT_OGG);
     SDL_SetVideoMode(800, 800, 32, SDL_OPENGL);
     glewInit();
-    printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
+    if(glewInit() != GLEW_OK) {
+        fputs("glewInit failed \n", stderr);
+    }
+
+    // print out some info about the graphics drivers
+    printf("OpenGL version: %s \n", glGetString(GL_VERSION));
+    printf("GLSL version: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+    printf("Vendor: %s \n", glGetString(GL_VENDOR));
+    printf("Renderer: %s \n", glGetString(GL_RENDERER));
+
+    // make sure OpenGL version 3.2 API is available
+    if(!GLEW_VERSION_3_2)
+        fputs("OpenGL 3.2 API is not available.\n", stderr);
+
 #if 1
     if(!puun_load_game("game2.dll")) {
         printf("error loading game code");//TODO LOGGER
