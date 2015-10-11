@@ -190,3 +190,4 @@ int WinMain(
 
 #include "gf/sprite.c"
 #include "gf/text.c"
+#include "gf/mesh.c"

@@ -216,3 +216,4 @@ int main(int argc, char** args) {
 
 #include "gf/sprite.c"
 #include "gf/text.c"
+#include "gf/mesh.c"
