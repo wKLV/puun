@@ -15,69 +15,9 @@ struct Game_Memory {
     v3 normals[36];
     v2 uvs[36];
     u32 elements[36];
-    v4 worldMatrix[4];
+    m4 worldMatrix;
     v3 rotation;
 };
-
-void identity(v4 matrix[4]) {
-    i32 i=0, j=0;
-    for(i=0; i<4; ++i) for(j=0; j<4; ++j) {
-        if(i==j) (matrix)[i].els[j] = 1.f;
-        else (matrix)[i].els[j] = 0.f;
-    }
-}
-void scale(v4 matrix[4], f32 scalar) {
-    i32 i=0, j=0;
-    for(i=0; i<3; ++i) for(j=0; j<3; ++j) {
-        (matrix)[i].els[j] *= scalar;
-    }
-}
-void rotx(v4 matrix[4], f32 angle) {
-    f32 co = cos(angle), si = sin(angle);
-    matrix[0].els[0] = 1;
-    matrix[0].els[1] = 0;
-    matrix[0].els[2] = 0;
-
-    matrix[1].els[0] = 0;
-    matrix[1].els[1] = co;
-    matrix[1].els[2] = si;
-
-    matrix[2].els[0] = 0;
-    matrix[2].els[1] = -si;
-    matrix[2].els[2] = co;
-}
-
-void rotz(v4 matrix[4], f32 angle) {
-    f32 co = cos(angle), si = sin(angle);
-    matrix[0].els[0] = co;
-    matrix[0].els[1] = si;
-    matrix[0].els[2] = 0;
-
-    matrix[1].els[0] = -si;
-    matrix[1].els[1] = co;
-    matrix[1].els[2] = 0;
-
-    matrix[2].els[0] = 0;
-    matrix[2].els[1] = 0;
-    matrix[2].els[2] = 1;
-}
-void roty(v4 matrix[4], f32 angle) {
-    f32 co = cos(angle), si = sin(angle);
-    matrix[0].els[0] = co;
-    matrix[0].els[1] = 0;
-    matrix[0].els[2] = -si;
-
-    matrix[1].els[0] = 0;
-    matrix[1].els[1] = 1;
-    matrix[1].els[2] = 0;
-
-    matrix[2].els[0] = si;
-    matrix[2].els[1] = 0;
-    matrix[2].els[2] = co;
-}
-void traslate(v4 matrix[4], v3 traslate) {
-    matrix[3] = add_v4(new_v4(traslate.x, traslate.y, traslate.z, 0), matrix[3]);
-}
 
 
 void init(Data game_memory) {
@@ -311,7 +251,7 @@ void init(Data game_memory) {
     
     mem->mesh = mesh;
     prepare_mesh(mem->mesh);
-    identity(mem->worldMatrix);
+    mem->worldMatrix = identity_m4();
 }
 
 void updateNrender(Data game_memory) {
@@ -328,50 +268,47 @@ void updateNrender(Data game_memory) {
         }
         bool isF5 = (character.key == 30);
         if(isF5) {
-            scale(mem->worldMatrix, 1.0/0.8);
+            mem->worldMatrix = append_m4(mem->worldMatrix, scale_m4(1.0/0.8));
             return;
         }
         bool isSpace = (character.key == SDLK_SPACE);
         if(isSpace) {
-            scale(mem->worldMatrix, 0.8);
+            mem->worldMatrix = append_m4(mem->worldMatrix, scale_m4(0.8));
            return;
         }
         bool isUp = (character.key == 'w');
         if(isUp) {
-            traslate(mem->worldMatrix, new_v3(0,0.2,0));
+            mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,0.2,0)));
            return;
         }
         bool isDown = (character.key == 's');
         if(isDown) {
-            traslate(mem->worldMatrix, new_v3(0,-0.2,0));
+            mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,-0.2,0)));
            return;
         }
         bool isLeft = (character.key == 'a');
         if(isLeft) {
-            traslate(mem->worldMatrix, new_v3(-0.2,0,0));
+            mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(-0.2,0,0)));
            return;
         }
         bool isRight = (character.key == 'd');
         if(isRight) {
-            traslate(mem->worldMatrix, new_v3(0.2,0,0));
+            mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0.2,0,0)));
            return;
         }
         bool isX = (character.key == 'x');
         if(isX) {
-            mem->rotation.x = fmod(mem->rotation.x + (TAU/8.f), TAU);
-            rotx(mem->worldMatrix, mem->rotation.x);
+            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(1,0,0), TAU/16));
            return;
         }
         bool isZ = (character.key == 'z');
         if(isZ) {
-            mem->rotation.z = fmod(mem->rotation.z + (TAU/8.f), TAU);
-            rotz(mem->worldMatrix, mem->rotation.z);
+            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,0,1), TAU/16));
            return;
         }
         bool isY = (character.key == 'y');
         if(isY) {
-            mem->rotation.y = fmod(mem->rotation.y + (TAU/8.f), TAU);
-            roty(mem->worldMatrix, mem->rotation.y);
+            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,1,0), TAU/16));
            return;
         }
     }
@@ -389,7 +326,7 @@ void updateNrender(Data game_memory) {
     render_meshList(&mem->mesh, 1, uniforms, 3);
 #endif
 
-    glUniformMatrix4fv(glGetUniformLocation(mem->program, "world"), 1, false, (f32*)mem->worldMatrix);
+    glUniformMatrix4fv(glGetUniformLocation(mem->program, "world"), 1, false, (f32*)&mem->worldMatrix);
     render_meshes(&mem->mesh, 1, mem->program);
     puun_SWAP_BUFFERS();
 }
