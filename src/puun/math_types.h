@@ -49,6 +49,45 @@ v2 new_v2(float x, float y);
 v3 new_v3(float x, float y, float z);
 v4 new_v4(float x, float y, float z, float w);
 
+typedef union m2 {
+    v2 els[2];
+    f32 f_els[4]
+    struct {
+        f32 a0; f32 a1;
+        f32 b0; f32 b1;
+    };
+    struct {
+        v2 a; v2 b;
+    };
+};
+
+typedef union m3 {
+    v3 els[3];
+    f32 f_els[9];
+    struct {
+        f32 a0; f32 a1; f32 a2;
+        f32 b0; f32 b1; f32 b2;
+        f32 c0; f32 c1; f32 c2;
+    };
+    struct {
+        v3 a; v3 b; v3 c;
+    };
+};
+
+typedef union m4 {
+    v4 els[4];
+    f32 f_els[16];
+    struct {
+        f32 a0; f32 a1; f32 a2; f32 a3;
+        f32 b0; f32 b1; f32 b2; f32 b3;
+        f32 c0; f32 c1; f32 c2; f32 c3;
+        f32 d0; f32 d1; f32 d2; f32 d3;
+    };
+    struct {
+        v4 a; v4 b; v4 c; v4 d;
+    };
+};
+
 typedef union {
     struct{
         f32 x1;
