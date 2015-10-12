@@ -24,6 +24,11 @@ void init(Data game_memory) {
     struct Game_Memory* mem = (struct Game_Memory*)game_memory;
     struct gf_Mesh mesh = init_mesh();
     
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthMask(1);
+
     u8 vs[] = "attribute vec3 position;\n\
                attribute vec3 normals;\n\
                attribute vec2 uv;\n\
@@ -32,18 +37,18 @@ void init(Data game_memory) {
                varying vec3 normal;\n\
                  void main(){\n\
                      gl_Position=world*vec4(position, 1);\n\
-                     uvs = uv; normal = world*vec4(normals,0);\n\
+                     uvs = uv; normal = (world*vec4(normals,0)).xyz;\n\
                  }";
-    u8 fs[] = "precision mediump float; \n\
+    u8 fs[] = "//precision mediump float; \n\
                varying float num;\n\
                varying vec2 uvs;\n\
                varying vec3 normal;\n\
                  void main() {\n\
                     vec4 colour = vec4(0.5, 0.75, 0.25, 1.0);\n\
                     vec4 specular = vec4(0.77, 0.9, 0.5, 1.0);\n\
-                    colour = vec4(uvs, 0, 0);\n\
+                  //  colour = vec4(uvs, 0, 0);\n\
                     vec3 normals = normalize(normal);\n\
-                    vec3 light = normalize(vec3(1, 0, -1));\n\
+                    vec3 light = normalize(vec3(1, 0, 0));\n\
                     float N = dot(light,normals);\n\
                     gl_FragColor = mix(colour, specular, N);\n\
                  }";
@@ -286,6 +291,16 @@ void updateNrender(Data game_memory) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,-0.2,0)));
            return;
         }
+        bool isBottom = (character.key == 'q');
+        if(isBottom) {
+            mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,0,+0.2)));
+           return;
+        }
+        bool isTop = (character.key == 'e');
+        if(isTop) {
+            mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,0,-0.2)));
+           return;
+        }
         bool isLeft = (character.key == 'a');
         if(isLeft) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(-0.2,0,0)));
@@ -298,17 +313,17 @@ void updateNrender(Data game_memory) {
         }
         bool isX = (character.key == 'x');
         if(isX) {
-            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(1,0,0), TAU/16));
+            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(1,0,0), TAU/160));
            return;
         }
         bool isZ = (character.key == 'z');
         if(isZ) {
-            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,0,1), TAU/16));
+            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,0,1), TAU/160));
            return;
         }
         bool isY = (character.key == 'y');
         if(isY) {
-            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,1,0), TAU/16));
+            mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,1,0), TAU/160));
            return;
         }
     }
