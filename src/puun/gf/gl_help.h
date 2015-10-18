@@ -38,4 +38,6 @@ GLuint setupTexture_Any(void* data, int x, int y, GLenum internalFormat, GLint f
 GLuint setupTexture(void* data, int x, int y);
 void setParam(GLsizei program, UniformData data);
 
+void load_wavefront_obj(String path, u32 vertexBuffer); 
+
 #endif

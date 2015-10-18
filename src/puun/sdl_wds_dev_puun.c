@@ -171,7 +171,7 @@ int WinMain(
         return 1;
     }
 #endif
-    game_memory = calloc(1, 1<<14);
+    game_memory = calloc(1, 1<<16);
     myInit(game_memory);
     running = true;
     while(running) {

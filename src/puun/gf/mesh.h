@@ -12,7 +12,7 @@ struct gf_Mesh {
     u8 vao;
 };
 
-struct gf_Mesh load_obj_from_file(String path);
+void load_obj_from_file(struct gf_Mesh* mesh, String path);
 
 struct gf_Mesh init_mesh();
 void prepare_mesh(struct gf_Mesh mesh);

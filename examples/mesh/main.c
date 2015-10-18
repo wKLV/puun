@@ -11,10 +11,9 @@ struct Game_Memory {
     b32 isKeyPressed;
     u8 program;
     struct gf_Mesh mesh;
-    v3 vertices[36];
-    v3 normals[36];
-    v2 uvs[36];
-    u32 elements[36];
+    v3 vertices[1<<10];
+    v3 normals[1<<10];
+    v2 uvs[1<<10];
     m4 worldMatrix;
     v3 rotation;
 };
@@ -22,7 +21,6 @@ struct Game_Memory {
 
 void init(Data game_memory) {
     struct Game_Memory* mem = (struct Game_Memory*)game_memory;
-    struct gf_Mesh mesh = init_mesh();
     
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -39,7 +37,7 @@ void init(Data game_memory) {
                      gl_Position=world*vec4(position, 1);\n\
                      uvs = uv; normal = (world*vec4(normals,0)).xyz;\n\
                  }";
-    u8 fs[] = "//precision mediump float; \n\
+    u8 fs[] = "precision mediump float; \n\
                varying float num;\n\
                varying vec2 uvs;\n\
                varying vec3 normal;\n\
@@ -48,15 +46,19 @@ void init(Data game_memory) {
                     vec4 specular = vec4(0.77, 0.9, 0.5, 1.0);\n\
                   //  colour = vec4(uvs, 0, 0);\n\
                     vec3 normals = normalize(normal);\n\
-                    vec3 light = normalize(vec3(1, 0, 0));\n\
+                    vec3 light = normalize(vec3(1, -.2, 0));\n\
                     float N = dot(light,normals);\n\
                     gl_FragColor = mix(colour, specular, N);\n\
                  }";
 
     mem->program = setupProgram(vs, 0, fs, 0);
+    mem->mesh = init_mesh();
+    mem->mesh.vertices = mem->vertices;
+    mem->mesh.uvs = mem->uvs;
+    mem->mesh.normals = mem->normals;
 
     //LET'S DO A CUBE!!
-
+#if 0
     i32 i = 0;
     {
         mem->normals[i] = new_v3(0,0,-1);
@@ -77,10 +79,16 @@ void init(Data game_memory) {
         mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,0,-1);
+        mem->uvs[i] = new_v2(1,0);
+        mem->vertices[i] = new_v3(+1,-1,-1);
+        mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,0,-1);
+        mem->uvs[i] = new_v2(0,1);
+        mem->vertices[i] = new_v3(-1,+1,-1);
+        mem->elements[i] = i;
         i++;
 
         mem->normals[i] = new_v3(0,0,-1);
@@ -108,10 +116,16 @@ void init(Data game_memory) {
         mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,0,+1);
+        mem->uvs[i] = new_v2(1,0);
+        mem->vertices[i] = new_v3(+1,-1,+1);
+        mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,0,+1);
+        mem->uvs[i] = new_v2(0,1);
+        mem->vertices[i] = new_v3(-1,+1,+1);
+        mem->elements[i] = i;
         i++;
 
         mem->normals[i] = new_v3(0,0,+1);
@@ -139,10 +153,16 @@ void init(Data game_memory) {
         mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,-1,0);
+        mem->uvs[i] = new_v2(1,0);
+        mem->vertices[i] = new_v3(+1,-1,-1);
+        mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,-1,0);
+        mem->uvs[i] = new_v2(0,1);
+        mem->vertices[i] = new_v3(-1,-1,+1);
+        mem->elements[i] = i;
         i++;
 
         mem->normals[i] = new_v3(0,-1,0);
@@ -170,10 +190,16 @@ void init(Data game_memory) {
         mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,+1,0);
+        mem->uvs[i] = new_v2(1,0);
+        mem->vertices[i] = new_v3(+1,+1,-1);
+        mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(0,+1,0);
+        mem->uvs[i] = new_v2(0,1);
+        mem->vertices[i] = new_v3(-1,+1,+1);
+        mem->elements[i] = i;
         i++;
 
         mem->normals[i] = new_v3(0,+1,0);
@@ -201,10 +227,16 @@ void init(Data game_memory) {
         mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(-1,0,0);
+        mem->uvs[i] = new_v2(1,0);
+        mem->vertices[i] = new_v3(-1,+1,-1);
+        mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
+        mem->normals[i] = new_v3(-1,0,0);
+        mem->uvs[i] = new_v2(0,1);
+        mem->vertices[i] = new_v3(-1,-1,+1);
+        mem->elements[i] = i;
         i++;
 
         mem->normals[i] = new_v3(-1,0,0);
@@ -217,6 +249,17 @@ void init(Data game_memory) {
         mem->normals[i] = new_v3(+1,0,0);
         mem->uvs[i] = new_v2(0,0);
         mem->vertices[i] = new_v3(+1,-1,-1);
+        mem->elements[i] = i;
+        i++;
+        mem->normals[i] = new_v3(+1,0,0);
+        mem->uvs[i] = new_v2(1,0);
+        mem->vertices[i] = new_v3(+1,+1,-1);
+        mem->elements[i] = i;
+        i++;
+
+        mem->normals[i] = new_v3(+1,0,0);
+        mem->uvs[i] = new_v2(0,1);
+        mem->vertices[i] = new_v3(+1,-1,+1);
         mem->elements[i] = i;
         i++;
 
@@ -232,12 +275,6 @@ void init(Data game_memory) {
         mem->elements[i] = i;
         i++;
 
-        mem->elements[i] = i-2;
-        i++;
-
-        mem->elements[i] = i-2;
-        i++;
-
         mem->normals[i] = new_v3(+1,0,0);
         mem->uvs[i] = new_v2(1,1);
         mem->vertices[i] = new_v3(+1,+1,+1);
@@ -245,16 +282,14 @@ void init(Data game_memory) {
         i++;
     }
 
-    mesh.vertices = mem->vertices;
-    mesh.vertices_length = 36;
-    mesh.uvs = mem->uvs;
-    mesh.uvs_length = 36;
-    mesh.normals = mem->normals;
-    mesh.normals_length = 36;
-    mesh.triangles = mem->elements;
-    mesh.triangles_length = 36;
+    mem->mesh.vertices_length = 36;
+    mem->mesh.uvs_length = 36;
+    mem->mesh.normals_length = 36;
+    mem->mesh.triangles_length = 36;
     
-    mem->mesh = mesh;
+#else
+    load_obj_from_file(&mem->mesh, "../assets/generic.obj");
+#endif
     prepare_mesh(mem->mesh);
     mem->worldMatrix = identity_m4();
 }
@@ -274,57 +309,46 @@ void updateNrender(Data game_memory) {
         bool isF5 = (character.key == 30);
         if(isF5) {
             mem->worldMatrix = append_m4(mem->worldMatrix, scale_m4(1.0/0.8));
-            return;
         }
         bool isSpace = (character.key == SDLK_SPACE);
         if(isSpace) {
             mem->worldMatrix = append_m4(mem->worldMatrix, scale_m4(0.8));
-           return;
         }
         bool isUp = (character.key == 'w');
         if(isUp) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,0.2,0)));
-           return;
         }
         bool isDown = (character.key == 's');
         if(isDown) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,-0.2,0)));
-           return;
         }
         bool isBottom = (character.key == 'q');
         if(isBottom) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,0,+0.2)));
-           return;
         }
         bool isTop = (character.key == 'e');
         if(isTop) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0,0,-0.2)));
-           return;
         }
         bool isLeft = (character.key == 'a');
         if(isLeft) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(-0.2,0,0)));
-           return;
         }
         bool isRight = (character.key == 'd');
         if(isRight) {
             mem->worldMatrix = append_m4(mem->worldMatrix, traslate_m4(new_v3(0.2,0,0)));
-           return;
         }
         bool isX = (character.key == 'x');
         if(isX) {
             mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(1,0,0), TAU/160));
-           return;
         }
         bool isZ = (character.key == 'z');
         if(isZ) {
             mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,0,1), TAU/160));
-           return;
         }
         bool isY = (character.key == 'y');
         if(isY) {
             mem->worldMatrix = append_m4(mem->worldMatrix, rot_axis_angle_m4(new_v3(0,1,0), TAU/160));
-           return;
         }
     }
     if(!character.isPressed) mem->isKeyPressed = false;
