@@ -68,7 +68,7 @@ void render_meshes(struct gf_Mesh* meshes, i32 manyMeshes, u8 program) {
                 stride, (Data)((3+2)*sizeof(f32)));
         glEnableVertexAttribArray(norms);
 
-        glDrawArrays(GL_TRIANGLES, 0, mesh.vertices_length*3);
+        glDrawArrays(GL_TRIANGLES, 0, mesh.vertices_length);
     }
     
 }
@@ -77,9 +77,9 @@ void load_obj_from_file(struct gf_Mesh* mesh, String path) {
     
     FILE* file = fopen(path, "rb");
 
-    v3* vertices = malloc(1<<13); 
-    v2* uvs = malloc(1<<11); 
-    v3* normals = malloc(1<<12); 
+    v3* vertices = malloc(1<<15); 
+    v2* uvs = malloc(1<<15); 
+    v3* normals = malloc(1<<15); 
 
     int remaining = 1;
     int vertI = 0;

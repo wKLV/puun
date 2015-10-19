@@ -11,9 +11,9 @@ struct Game_Memory {
     b32 isKeyPressed;
     u8 program;
     struct gf_Mesh mesh;
-    v3 vertices[1<<10];
-    v3 normals[1<<10];
-    v2 uvs[1<<10];
+    v3 vertices[1<<12];
+    v3 normals[1<<12];
+    v2 uvs[1<<12];
     m4 worldMatrix;
     v3 rotation;
 };
@@ -44,7 +44,7 @@ void init(Data game_memory) {
                  void main() {\n\
                     vec4 colour = vec4(0.5, 0.75, 0.25, 1.0);\n\
                     vec4 specular = vec4(0.77, 0.9, 0.5, 1.0);\n\
-                  //  colour = vec4(uvs, 0, 0);\n\
+                 //   colour = vec4(uvs, 0, 0);\n\
                     vec3 normals = normalize(normal);\n\
                     vec3 light = normalize(vec3(1, -.2, 0));\n\
                     float N = dot(light,normals);\n\
@@ -288,7 +288,7 @@ void init(Data game_memory) {
     mem->mesh.triangles_length = 36;
     
 #else
-    load_obj_from_file(&mem->mesh, "../assets/generic.obj");
+    load_obj_from_file(&mem->mesh, "../assets/Lugae.obj");
 #endif
     prepare_mesh(mem->mesh);
     mem->worldMatrix = identity_m4();

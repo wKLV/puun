@@ -196,7 +196,7 @@ int main(int argc, char** args) {
         return 1;
     }
 
-    game_memory = calloc(1, 1<<16);
+    game_memory = calloc(1, 1<<18);
     myInit(game_memory);
     running = true;
 
