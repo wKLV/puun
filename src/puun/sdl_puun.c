@@ -118,7 +118,7 @@ int main() {
     if(!GLEW_VERSION_3_2)
         fputs("OpenGL 3.2 API is not available.\n", stderr);
 
-    game_memory = calloc(1, 1<<16);
+    game_memory = calloc(1, 1<<20);
     init(game_memory);
     running = true;
     #ifdef JS

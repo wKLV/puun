@@ -11,9 +11,11 @@ struct Game_Memory {
     b32 isKeyPressed;
     u8 program;
     struct gf_Mesh mesh;
-    v3 vertices[1<<12];
-    v3 normals[1<<12];
-    v2 uvs[1<<12];
+    struct gf_Mesh mesh2;
+    struct gf_Mesh mesh3;
+    v3 vertices[1<<13];
+    v3 normals[1<<13];
+    v2 uvs[1<<13];
     m4 worldMatrix;
     v3 rotation;
 };
@@ -288,9 +290,17 @@ void init(Data game_memory) {
     mem->mesh.triangles_length = 36;
     
 #else
-    load_obj_from_file(&mem->mesh, "../assets/Lugae.obj");
+    load_obj_from_file(&mem->mesh, "../assets/cool.obj");
 #endif
     prepare_mesh(mem->mesh);
+/*
+    mem->mesh2 = init_mesh(); 
+    mem->mesh2.vertices = mem->vertices;
+    mem->mesh2.uvs = mem->uvs;
+    mem->mesh2.normals = mem->normals;
+    load_obj_from_file(&mem->mesh2, "../assets/Lugae.obj");
+    prepare_mesh(mem->mesh2);
+*/
     mem->worldMatrix = identity_m4();
 }
 
@@ -367,6 +377,7 @@ void updateNrender(Data game_memory) {
 
     glUniformMatrix4fv(glGetUniformLocation(mem->program, "world"), 1, false, (f32*)&mem->worldMatrix);
     render_meshes(&mem->mesh, 1, mem->program);
+    //render_meshes(&mem->mesh2, 1, mem->program);
     puun_SWAP_BUFFERS();
 }
 

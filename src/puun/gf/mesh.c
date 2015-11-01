@@ -77,9 +77,9 @@ void load_obj_from_file(struct gf_Mesh* mesh, String path) {
     
     FILE* file = fopen(path, "rb");
 
-    v3* vertices = malloc(1<<15); 
-    v2* uvs = malloc(1<<15); 
-    v3* normals = malloc(1<<15); 
+    v3* vertices = malloc(1<<16); 
+    v2* uvs = malloc(1<<16); 
+    v3* normals = malloc(1<<16); 
 
     int remaining = 1;
     int vertI = 0;
