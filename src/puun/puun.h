@@ -15,6 +15,7 @@ void getMousePosition(float* x, float* y);
 void getKeyboardKey(puun_KEY* character);
 void getMouseClick(puun_MouseClick* click);
 void getTimeElapsed(unsigned int* time);
+unsigned int getMiliSecondsFromFirst();
 
 void puun_SWAP_BUFFERS();
 

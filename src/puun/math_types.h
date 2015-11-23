@@ -95,13 +95,13 @@ m2 identity_m2();
 m3 identity_m3();
 m4 identity_m4();
 
-v2 row_m2(m2 m, i32 row);
-v3 row_m3(m3 m, i32 row);
-v4 row_m4(m4 m, i32 row);
+v2 row_m2(m2 m, s32 row);
+v3 row_m3(m3 m, s32 row);
+v4 row_m4(m4 m, s32 row);
 
-v2 col_m2(m2 m, i32 row);
-v3 col_m3(m3 m, i32 row);
-v4 col_m4(m4 m, i32 row);
+v2 col_m2(m2 m, s32 row);
+v3 col_m3(m3 m, s32 row);
+v4 col_m4(m4 m, s32 row);
 
 m3 m3_from_m2(m2 m);
 m2 m2_from_m3(m3 m);
@@ -216,7 +216,7 @@ b32 isValid_v##n(v##n v) {\
 #define puun_create_matrix(n) \
 m##n add_m##n(m##n a, m##n b) {\
     m##n result = ZERO_STRUCT;\
-    i32 i; i32 j;\
+    s32 i; s32 j;\
     for(i=0; i<n; ++i) for(j=0; j<n; ++j) {\
         result.els[i].els[j] = a.els[i].els[j] + b.els[i].els[j];\
     }\
@@ -224,7 +224,7 @@ m##n add_m##n(m##n a, m##n b) {\
 }\
 m##n minus_m##n(m##n m) {\
     m##n result = ZERO_STRUCT;\
-    i32 i; i32 j;\
+    s32 i; s32 j;\
     for(i=0; i<n; ++i) for(j=0; j<n; ++j) {\
         result.els[i].els[j] = - m.els[i].els[j];\
     }\
@@ -238,7 +238,7 @@ m##n sub_m##n(m##n a, m##n b) {\
 }\
 m##n scalar_m##n(m##n m, float s) {\
     m##n result = ZERO_STRUCT;\
-    i32 i; i32 j;\
+    s32 i; s32 j;\
     for(i=0; i<n; ++i) for(j=0; j<n; ++j) {\
         result.els[i].els[j] = s * m.els[i].els[j];\
     }\
@@ -246,7 +246,7 @@ m##n scalar_m##n(m##n m, float s) {\
 }\
 m##n append_m##n(m##n a, m##n b) {\
     m##n result = ZERO_STRUCT;\
-    i32 i; i32 j;\
+    s32 i; s32 j;\
     for(i=0; i<n; ++i) for(j=0; j<n; ++j) {\
         result.els[i].els[j] = dot_v##n(row_m##n(a, i), col_m##n(b, j));\
     }\
@@ -254,7 +254,7 @@ m##n append_m##n(m##n a, m##n b) {\
 }\
 b32 isValid_m##n(m##n v) {\
    b32 result = true;\
-   i32 i; i32 j;\
+   s32 i; s32 j;\
    for(i=0; i<n; ++i) for(j=0; j<n; ++j) {\
         result &= v.els[i].els[j] == v.els[i].els[j];\
     }\
@@ -307,9 +307,9 @@ m4 identity_m4() {
     return result;
 }
 
-v2 row_m2(m2 m, i32 row) {
+v2 row_m2(m2 m, s32 row) {
     v2 result = ZERO_STRUCT;
-    i32 i;
+    s32 i;
     for(i=0; i<2; ++i) {
         result.els[i] = m.els[row].els[i];
     }
@@ -317,9 +317,9 @@ v2 row_m2(m2 m, i32 row) {
 
 }
 
-v3 row_m3(m3 m, i32 row) {
+v3 row_m3(m3 m, s32 row) {
     v3 result = ZERO_STRUCT;
-    i32 i;
+    s32 i;
     for(i=0; i<3; ++i) {
         result.els[i] = m.els[row].els[i];
     }
@@ -327,18 +327,18 @@ v3 row_m3(m3 m, i32 row) {
 
 }
 
-v4 row_m4(m4 m, i32 row) {
+v4 row_m4(m4 m, s32 row) {
     v4 result = ZERO_STRUCT;
-    i32 i;
+    s32 i;
     for(i=0; i<4; ++i) {
         result.els[i] = m.els[row].els[i];
     }
     return result;
 }
 
-v2 col_m2(m2 m, i32 col) {
+v2 col_m2(m2 m, s32 col) {
     v2 result = ZERO_STRUCT;
-    i32 i;
+    s32 i;
     for(i=0; i<2; ++i) {
         result.els[i] = m.els[i].els[col];
     }
@@ -346,9 +346,9 @@ v2 col_m2(m2 m, i32 col) {
 
 }
 
-v3 col_m3(m3 m, i32 col) {
+v3 col_m3(m3 m, s32 col) {
     v3 result = ZERO_STRUCT;
-    i32 i;
+    s32 i;
     for(i=0; i<3; ++i) {
         result.els[i] = m.els[i].els[col];
     }
@@ -356,9 +356,9 @@ v3 col_m3(m3 m, i32 col) {
 
 }
 
-v4 col_m4(m4 m, i32 col) {
+v4 col_m4(m4 m, s32 col) {
     v4 result = ZERO_STRUCT;
-    i32 i;
+    s32 i;
     for(i=0; i<4; ++i) {
         result.els[i] = m.els[i].els[col];
     }
@@ -367,7 +367,7 @@ v4 col_m4(m4 m, i32 col) {
 
 m3 m3_from_m2(m2 m) {
     m3 result = identity_m3();
-    i32 i; i32 j;
+    s32 i; s32 j;
     for(i=0; i<2; ++i) for(j=0; j<2; ++j) {
         result.els[i].els[j] = m.els[i].els[j];
     }
@@ -376,7 +376,7 @@ m3 m3_from_m2(m2 m) {
 
 m2 m2_from_m3(m3 m) {
     m2 result = ZERO_STRUCT; 
-    i32 i; i32 j;
+    s32 i; s32 j;
     for(i=0; i<2; ++i) for(j=0; j<2; ++j) {
         result.els[i].els[j] = m.els[i].els[j];
     }
@@ -385,7 +385,7 @@ m2 m2_from_m3(m3 m) {
 
 m3 m3_from_m4(m4 m) {
     m3 result = identity_m3();
-    i32 i; i32 j;
+    s32 i; s32 j;
     for(i=0; i<3; ++i) for(j=0; j<3; ++j) {
         result.els[i].els[j] = m.els[i].els[j];
     }
@@ -393,7 +393,7 @@ m3 m3_from_m4(m4 m) {
 }
 m4 m4_from_m3(m3 m) {
     m4 result = identity_m4();
-    i32 i; i32 j;
+    s32 i; s32 j;
     for(i=0; i<3; ++i) for(j=0; j<3; ++j) {
         result.els[i].els[j] = m.els[i].els[j];
     }
@@ -455,7 +455,7 @@ m4 rot_axis_angle_m4(v3 axis, f32 angle) {
 
 m3 traslate_m3(v2 d) {
     m3 result = identity_m3();
-    i32 i;
+    s32 i;
     for(i=0; i<2; ++i) {
         result.c.els[i] = d.els[i];
     }
@@ -463,7 +463,7 @@ m3 traslate_m3(v2 d) {
 }
 m4 traslate_m4(v3 d) {
     m4 result = identity_m4();
-    i32 i;
+    s32 i;
     for(i=0; i<3; ++i) {
         result.d.els[i] = d.els[i];
     }

@@ -17,9 +17,9 @@ void prepare_mesh(struct gf_Mesh mesh) {
     stride += 2*sizeof(f32);
     stride += 3*sizeof(f32);
     f32* data = malloc(mesh.vertices_length*stride);
-    i32 i, dataI;
+    s32 i, dataI;
     for(i=0, dataI=0; i<mesh.vertices_length; ++i) {
-        i32 j;
+        s32 j;
         for(j=0; j<3; ++j)
             data[dataI++] = mesh.vertices[i].els[j];
         for(j=0; j<2; ++j)
@@ -37,10 +37,10 @@ void prepare_mesh(struct gf_Mesh mesh) {
     free(data);
 }
 
-void render_meshes(struct gf_Mesh* meshes, i32 manyMeshes, u8 program) {
+void render_meshes(struct gf_Mesh* meshes, s32 manyMeshes, u8 program) {
     glUseProgram(program);
 
-    i32 m, i;
+    s32 m, i;
     for(m=0; m<manyMeshes; ++m) {
         struct gf_Mesh mesh = meshes[m];
 
@@ -72,7 +72,7 @@ void render_meshes(struct gf_Mesh* meshes, i32 manyMeshes, u8 program) {
     }
     
 }
-void load_obj_from_file(struct gf_Mesh* mesh, String path) {
+void load_wavefront_from_file(struct gf_Mesh* mesh, String path) {
     struct gf_Mesh result = *mesh;
     
     FILE* file = fopen(path, "rb");
@@ -137,7 +137,6 @@ void load_obj_from_file(struct gf_Mesh* mesh, String path) {
     free(uvs);
     free(normals);
 
-    result.triangles_length = elI;
     result.vertices_length = elI;
 
     *mesh = result;

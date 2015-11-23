@@ -13,8 +13,8 @@ DataArray puun_allocate(puun_Arena##MANYSLOTS* arena, u32 size) {\
     DataArray result = ZERO_STRUCT;\
     u32 manySlots = (size % arena->slotSize) + 1;\
     assert(manySlots<MANYSLOTS);/*TODO: Should we fail silently? or should we assert?*/\
-    i32 i;\
-    i32 j;\
+    s32 i;\
+    s32 j;\
     for(i=0; i<MANYSLOTS; ++i) { \
         for(j=0; j<manySlots; ++j) {\
             if(arena->slots[i] != 0) break;\

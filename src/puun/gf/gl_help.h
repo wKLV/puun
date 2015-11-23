@@ -19,7 +19,7 @@ enum dataStructure {
 };
 
 typedef struct {
-    u8* name;
+    String name;
     enum dataStructure dataStructure;
     GLenum dataType;
     void* data;
@@ -33,9 +33,10 @@ void show_info_log(
             PFNGLGETSHADERINFOLOGPROC glGet__InfoLog
         );
 
-GLuint setupProgram(u8* vertexSource, int vertexSourceSize, u8* fragmentSource, int fragmentSourceSize);
+GLuint setupProgram(String vertexSource, String fragmentSource);
 GLuint setupTexture_Any(void* data, int x, int y, GLenum internalFormat, GLint format, GLenum type);
 GLuint setupTexture(void* data, int x, int y);
+UniformData setupTexture_and_uniform(void* data, int x, int y, String name);
 void setParam(GLsizei program, UniformData data);
 
 void load_wavefront_obj(String path, u32 vertexBuffer); 

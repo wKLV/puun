@@ -50,6 +50,10 @@ void getTimeElapsed(u32* time) {
     ticks = nextTicks;
 }
 
+u32 getMiliSecondsFromFirst() {
+    return ticks = SDL_GetTicks();
+}
+
 Mix_Music* music[512];
 int music_length;
 Mix_Chunk* chunks[1024];

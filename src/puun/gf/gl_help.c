@@ -19,9 +19,9 @@ void show_info_log(
     free(log);
 }
 
-GLuint setupProgram(u8* vertexSource, int vertexSourceSize, u8* fragmentSource, int fragmentSourceSize) {
-    u8* vs = vertexSource;
-    u8* fs = fragmentSource;
+GLuint setupProgram(String vertexSource, String fragmentSource) {
+    String vs = vertexSource;
+    String fs = fragmentSource;
     GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     GLint shader_ok;
@@ -73,6 +73,16 @@ GLuint setupTexture_Any(void* data, int x, int y, GLenum internalFormat, GLint f
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glGenerateMipmap(GL_TEXTURE_2D);
     return id;
+}
+
+UniformData setupTexture_and_uniform(void* data, int x, int y, String name) {
+    UniformData result = ZERO_STRUCT;
+    GLuint id = setupTexture(data, x, y);
+    result.name = name;
+    result.dataStructure = Texture;
+    result.data = data;
+    result.id = id;
+    return result;
 }
 
 GLuint setupTexture(void* data, int x, int y) {

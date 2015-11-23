@@ -69,11 +69,11 @@ gf_textStyle initTextStyle(u8* font_pos,
 //// can free temp_bitmap at this point
 //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    u8 vs[] = "attribute vec2 position; attribute vec2 uv;\n\
+    String vs = "attribute vec2 position; attribute vec2 uv;\n\
                  varying vec2 texcoord; void main(){\n\
                      gl_Position=vec4(position/256.0, -1.0, 1.0);\n\
                     texcoord=uv;}";
-    u8 fs[] = "precision mediump float; \n\
+    String fs = "precision mediump float; \n\
                  uniform sampler2D texture; \n\
                  varying vec2 texcoord; \n\
                  void main() {\n\
@@ -84,7 +84,7 @@ gf_textStyle initTextStyle(u8* font_pos,
                  //      gl_FragColor = vec4(0.5, 0.75, 0.25, 1.0);\n\
                  }\n";
 
-    data->glProgram = setupProgram(vs, strlen((char*)vs), fs, strlen((char*)fs));
+    data->glProgram = setupProgram(vs, fs);
 
     glGenBuffers(1, &data->glBuffer);
     return s;
