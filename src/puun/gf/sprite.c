@@ -38,18 +38,18 @@ SpriteSheet* loadSpriteSheet(String loc) {
 }
 
 SpriteList spritesFromSheet(SpriteSheet s, Data squares){
-    u8 vs[] = "attribute vec2 position; attribute vec2 uv;\n\
+    String vs = "attribute vec2 position; attribute vec2 uv;\n\
                  varying vec2 texcoord; void main(){\n\
                      gl_Position=vec4(position, 0, 1);\n\
                     texcoord=uv;}";
-    u8 fs[] = "precision mediump float; \n\
+    String fs = "precision mediump float; \n\
                  uniform sampler2D texture; \n\
                  varying vec2 texcoord; \n\
                  void main() {\n\
                      gl_FragColor = texture2D(texture, texcoord);\n\
                  }";
 
-    Program = setupProgram(vs, 0, fs, 0);
+    Program = setupProgram(vs, fs);
     SquareList sl = create_square_list(Program, squares, 0);
 
     SpriteList splist = ZERO_STRUCT;

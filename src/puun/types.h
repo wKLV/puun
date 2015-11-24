@@ -6,6 +6,7 @@
 
 typedef void* Data;
 typedef char* String;
+#define STRING(name, n) char name[n];
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -41,7 +42,10 @@ typedef double f64;
 #endif
 
 #define clamp(x, min, max) (((x)>(max))?(max):(((x)<(min))?(min):(x)))
+#define clamp01(x) clamp((x), 0, 1)
 
+#define lerp(x, y, t) ((x)*(t) + (1-(t))*(y))
+#define quadlerp(x, y, t) lerp((x), (y), (t)*(t)) 
 
 // ARRAY HELPER
 
