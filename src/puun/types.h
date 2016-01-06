@@ -25,6 +25,10 @@ typedef uint64_t b64;
 typedef float f32;
 typedef double f64;
 
+#define KIBIBYTES(x) ((1 << 10)*(x))
+#define MEBIBYTES(x) ((1<<10) * KIBIBYTES(x))
+#define GIBIBYTES(x) ((1<<10) * MEBIBYTES(x))
+
 // STRUCT INITIALIZER
 //#ifdef MSVC
 #if _MSC_VER
