@@ -29,7 +29,7 @@ void init(Data game_memory) {
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(1);
 
-    u8 vs[] = "attribute vec3 position;\n\
+    String vs = "attribute vec3 position;\n\
                attribute vec3 normals;\n\
                attribute vec2 uv;\n\
                uniform mat4 world;\n\
@@ -39,7 +39,7 @@ void init(Data game_memory) {
                      gl_Position=world*vec4(position, 1);\n\
                      uvs = uv; normal = (world*vec4(normals,0)).xyz;\n\
                  }";
-    u8 fs[] = "precision mediump float; \n\
+    String fs = "precision mediump float; \n\
                varying float num;\n\
                varying vec2 uvs;\n\
                varying vec3 normal;\n\
@@ -53,7 +53,7 @@ void init(Data game_memory) {
                     gl_FragColor = mix(colour, specular, N);\n\
                  }";
 
-    mem->program = setupProgram(vs, 0, fs, 0);
+    mem->program = setupProgram(vs, fs);
     mem->mesh = init_mesh();
     mem->mesh.vertices = mem->vertices;
     mem->mesh.uvs = mem->uvs;
@@ -290,7 +290,7 @@ void init(Data game_memory) {
     mem->mesh.triangles_length = 36;
     
 #else
-    load_obj_from_file(&mem->mesh, "../assets/cool.obj");
+    load_wavefront_from_file(&mem->mesh, "../assets/golem_clean.obj");
 #endif
     prepare_mesh(mem->mesh);
 /*
